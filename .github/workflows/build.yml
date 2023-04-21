@@ -1,0 +1,44 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Use Node.js 16.x
+        uses: actions/setup-node@v2.5.1
+        with:
+          node-version: '16.x'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build the Application
+        run: npm run build
+        env:
+          VITE_API_URL: https://4580-51-250-73-26.ngrok-free.app
+          VITE_AUTHORIZATION_HEADER: Bearer
+
+      - name: Copy Dockerfile and .dockerignore to dist directory
+        run: |
+          cp Dockerfile dist/
+          cp .dockerignore dist/
+        working-directory: .
+
+      - name: Deploy to Release Branch
+        uses: JamesIves/github-pages-deploy-action@4.1.4
+        with:
+          branch: release
+          folder: dist
+

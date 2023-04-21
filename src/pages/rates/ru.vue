@@ -1,0 +1,196 @@
+<script setup>
+import { usePsStore } from "@/stores/usePsStore";
+
+const loadMessage = ref("Загружаем курсы...")
+const store = usePsStore ();
+const data = ref ([]);
+const priorityCurrencies = new Set ([ "USD", "EUR", "RUB" ]);
+store.fetchBank ({ bank: 'ruBanks' }).then (response => {
+  data.value = response.data.data;
+  data.value.sort (
+    function (a, b) {
+      if (priorityCurrencies.has (a.name) && !priorityCurrencies.has (b.name)) {
+        return -1;
+      }
+      if (!priorityCurrencies.has (a.name) && priorityCurrencies.has (b.name)) {
+        return 1;
+      }
+      return 0;
+    }
+  )
+}).catch (error => {
+  loadMessage.value = "Ошибка загрузки курсов!"
+  console.log (error);
+})
+let formatFloat = number => {
+  let sign = number < 0 ? "-" : "";
+  let intPart = Math.abs (parseInt (number));
+  let floatPart = (Math.abs (number) % 1).toFixed (2).slice (2);
+  return `<span class="text-h6">${sign}${intPart}</span>.${floatPart}`
+}
+let formatSigned = number => {
+  let sign = number < 0 ? "-" : "+";
+  let intPart = Math.abs (parseInt (number));
+  let floatPart = (Math.abs (number) % 1).toFixed (2).slice (2);
+  return `<span class="text-h6">${sign}${intPart}</span>.${floatPart}`
+}
+let formatPercent = number => {
+  number *= 100
+  let sign = number < 0 ? "-" : "+";
+  let intPart = Math.abs (parseInt (number));
+  let floatPart = (Math.abs (number) % 1).toFixed (2).slice (2);
+  return `<span class="text-h6">${sign}${intPart}</span>.${floatPart}%`
+}
+</script>
+<template>
+  <div>
+    <VCard
+      class="mb-6"
+    >
+      <VCardText
+        class="text-h4 px-10 font-weight-bold"
+      >
+        <VAvatar
+          size="50"
+          image="/src/assets/images/misc/currencies/fiat/RUB.png"
+        />
+        Основные курсы валют банков РФ
+      </VCardText>
+      <template
+        v-for="currency in data"
+        :key="currency.name"
+      >
+        <VCardText
+          class="text-h5 font-weight-bold"
+        >
+          Обмен {{ currency.name }} в РФ
+        </VCardText>
+        <VTable class="text-no-wrap pb-10 px-10">
+          <!-- 👉 Table head -->
+          <thead>
+          <tr>
+
+            <th
+              scope="col"
+              class="text-subtitle-1"
+            >
+              Банк
+            </th>
+            <th
+              scope="col"
+              class="text-subtitle-1"
+            >
+              Валюта
+            </th>
+            <th
+              scope="col"
+              class="text-subtitle-1"
+            >
+              Покупка
+            </th>
+            <th
+              scope="col"
+              class="text-subtitle-1"
+            >
+              Продажа
+            </th>
+            <th
+              scope="col"
+              class="text-subtitle-1"
+            >
+              % зазор
+              <br>
+              от покупки на MOEX
+            </th>
+            <th
+              scope="col"
+              class="text-subtitle-1"
+            >
+              % спред
+              <br>
+              от покупки на MOEX
+            </th>
+          </tr>
+          </thead>
+
+          <!-- 👉 Table Body -->
+          <tbody>
+          <tr
+            v-for="item in currency.rates"
+            :key="item.code"
+            style="height: 3.5rem;"
+          >
+
+            <!-- 👉 Name -->
+            <td>
+              <div class="d-flex align-center gap-3">
+                <VAvatar
+                  rounded
+                  variant="plain"
+                  color="primary"
+                  size="20"
+                >
+                  <VImg
+                    :src="`/src/assets/images/misc/banks/small/${item.bank.toLowerCase()}.png`"
+                  />
+                </VAvatar>
+
+                <div>
+                  <h6 class="text-base text-medium-emphasis font-weight-semibold">
+                    {{ item.bank }}
+                  </h6>
+                </div>
+              </div>
+            </td>
+
+            <!-- 👉 Leader -->
+            <td class="text-high-emphasis text-h6 font-weight-bold">
+              {{ item.code }}
+            </td>
+
+            <td class="text-medium-emphasis"
+                v-html="formatFloat(item.priceBuy)"
+            >
+            </td>
+
+            <td class="text-medium-emphasis"
+                v-html="formatFloat(item.priceSell)"
+            >
+            </td>
+            <td class="text-medium-emphasis"
+                v-html="formatSigned(item.moexZazor)"
+            >
+            </td>
+            <td class="text-medium-emphasis"
+                v-html="formatSigned(item.moexSpread)"
+            >
+            </td>
+          </tr>
+          </tbody>
+
+        </VTable>
+      </template>
+      <template
+        v-if="!data.length"
+      >
+        <VCardItem>
+          <div
+            colspan="8"
+            class="text-center text-body-1 justify-center align-center"
+          >
+            {{ loadMessage }}&nbsp;
+            <VProgressCircular
+              :width="3"
+              color="primary"
+              indeterminate
+            />
+          </div>
+        </VCardItem>
+      </template>
+    </VCard>
+  </div>
+</template>
+<route lang="yaml">
+meta:
+  title: Russian Federation - Rates
+</route>
