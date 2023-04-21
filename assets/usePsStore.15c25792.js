@@ -1,0 +1,1 @@
+import{I as r,J as t}from"./index.cd0f8983.js";const n=r("PsStore",{actions:{fetchQiwi(e){return t.get("/ps/qiwi/",{params:e})},fetchBank(e){return t.get("/ps/banks/",{params:e})},fetchProvider(e){return t.get(`/ps/${e.slug}/`)}}});export{n as u};
