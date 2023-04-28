@@ -1,9 +1,10 @@
 <script setup>
-import { useItemsStore } from "@/stores/useItemsStore"
+import { useItemStore, useWishStore } from "@/stores/useRest"
 import { useAuthStore } from "@/stores/useAuthStore"
 
 const router = useRouter ()
-const itemsStore = useItemsStore ()
+const itemStore = useItemStore ()
+const wishStore = useWishStore ()
 const authStore = useAuthStore ()
 const data = ref (null)
 
@@ -32,7 +33,7 @@ watchEffect (
 )
 watchEffect (
   () => {
-    itemsStore.fetchItems (
+    itemStore.fetchItems (
       {
         state: 'exposed',
       },

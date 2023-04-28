@@ -1,23 +1,26 @@
 <script setup>
 import { urlValidator } from '@core/utils/validators'
-import { useItemsStore } from "@/stores/useItemsStore"
+import { useItemStore } from "@/stores/useRest"
 
 import { useAuthStore } from "@/stores/useAuthStore"
+
 const snackbar = ref ({
   enabled: false,
   type: 'success',
   message: 'Hello!',
 })
 const router = useRouter ()
-const itemsStore = useItemsStore ()
+const itemStore = useItemStore ()
 const authStore = useAuthStore ()
 const tab = ref ('base-info')
 
+const tags = [ 'New' ]
 const form = ref ({
   name: "",
   description: "",
   state: "draft",
   category: "clothes",
+  tags: [],
   photos: [ "https://thumbs.dreamstime.com/b/grayscale-random-squares-checkered-pattern-mosaic-abstract-geometric-design-element-cubic-cubism-illustration-214781178.jpg" ],
 })
 
@@ -59,7 +62,7 @@ const newItem = async () => {
     message: "Saving item 🧠",
     type: 'warning',
   }
-  itemsStore.postItem (
+  itemStore.postItem (
     {
       user: authStore.$state.userData.id,
       ...form.value,
@@ -67,15 +70,15 @@ const newItem = async () => {
   ).then (
     response => {
       console.log (response.data)
-      if (response.status > 250){
-        throw `Failed to save! Response: ${JSON.stringify(response.data)}`
+      if (response.status > 250) {
+        throw `Failed to save! Response: ${JSON.stringify (response.data)}`
       }
       snackbar.value = {
         enabled: true,
         message: "Item saved 🎉",
         type: 'success',
       }
-      setTimeout(
+      setTimeout (
         () => {
           router.push ({
             'name': 'items',
@@ -115,7 +118,7 @@ const newItem = async () => {
         Photos
       </VTab>
     </VTabs>
-    <VDivider />
+    <VDivider/>
 
     <VCard flat>
       <VCardText>
@@ -159,6 +162,29 @@ const newItem = async () => {
                 </VCol>
                 <VCol
                   cols="12"
+                  md="6"
+                >
+                  <VCombobox
+                    v-model="form.tags"
+                    :items="tags"
+                    label="Tags"
+                    multiple
+                  >
+                    <template #selection="{ item }">
+                      <VChip class="mt-1">
+                        <VAvatar
+                          start
+                          color="primary"
+                        >
+                          {{ String (item.title).charAt (0).toUpperCase () }}
+                        </VAvatar>
+                        {{ item.title }}
+                      </VChip>
+                    </template>
+                  </VCombobox>
+                </VCol>
+                <VCol
+                  cols="12"
                 >
                   <VTextarea
                     v-model="form.description"
@@ -198,7 +224,7 @@ const newItem = async () => {
         </VWindow>
       </VCardText>
 
-      <VDivider />
+      <VDivider/>
 
       <VCardText class="d-flex gap-4">
         <VBtn

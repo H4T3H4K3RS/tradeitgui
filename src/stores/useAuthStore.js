@@ -51,7 +51,8 @@ export const useAuthStore = defineStore ({
     logout (params) {
       localStorage.removeItem ('userData')
       localStorage.removeItem ('authData')
-      this.$reset ()
+
+      // this.$reset ()
     },
   },
 })

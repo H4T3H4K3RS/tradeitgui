@@ -1,8 +1,8 @@
 <script setup>
 import UserBioPanel from '@/views/user/UserBioPanel.vue'
 import UserTabBillingsPlans from '@/views/user/UserTabBillingsPlans.vue'
-import { useAuthStore } from "@/stores/useAuthStore";
-import UserTabWallet from "@/views/user/UserTabWallet.vue";
+import { useAuthStore } from "@/stores/useAuthStore"
+import UserTabWallet from "@/views/user/UserTabWallet.vue"
 
 const route = useRoute()
 const authStore = useAuthStore()
@@ -19,10 +19,11 @@ const tabs = [
     title: 'Кошелёк',
   },
 ]
+
 authStore.me().then(
   () => {
     userData.value = authStore.$state.userData
-  }
+  },
 )
 </script>
 
@@ -46,9 +47,9 @@ authStore.me().then(
         class="v-tabs-pill"
       >
         <VTab
-          class="me-1"
           v-for="tab in tabs"
           :key="tab.icon"
+          class="me-1"
         >
           <VIcon
             :size="18"
@@ -64,9 +65,8 @@ authStore.me().then(
         class="mt-6 disable-tab-transition"
         :touch="false"
       >
-
         <VWindowItem>
-          <UserTabBillingsPlans :user-data="userData"  />
+          <UserTabBillingsPlans :user-data="userData" />
         </VWindowItem>
         <VWindowItem>
           <UserTabWallet :user-data="userData" />

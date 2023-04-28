@@ -16,11 +16,11 @@ const tabs = ref ([
   },
 ])
 
-import { useItemsStore } from "@/stores/useItemsStore"
+import { useItemStore } from "@/stores/useRest"
 import { useAuthStore } from "@/stores/useAuthStore"
 
 const router = useRouter ()
-const itemsStore = useItemsStore ()
+const itemStore = useItemStore ()
 const authStore = useAuthStore ()
 const isSnackbarEnabled = ref (false)
 const snackbarMessage = ref ("")
@@ -55,7 +55,7 @@ watchEffect(
 watchEffect (
   () => {
     data.value = null
-    itemsStore.fetchItems (
+    itemStore.fetchItems (
       {
         state: tab.value,
         user: authStore.$state.userData.id,
@@ -105,7 +105,7 @@ const formatTimestamp = timestamp => {
 }
 
 const deleteItem = async id => {
-  itemsStore.deleteItem (
+  itemStore.deleteItem (
     {
       id: id,
     },

@@ -1,17 +1,19 @@
 <script setup>
 import { urlValidator } from '@core/utils/validators'
-import { useItemsStore } from "@/stores/useItemsStore"
+import { useItemStore } from "@/stores/useRest"
 
 const router = useRouter ()
 const route = useRoute ()
 const tab = ref ('base-info')
-const itemsStore = useItemsStore ()
+const itemStore = useItemStore ()
 
 const snackbar = ref ({
   enabled: false,
   type: 'success',
   message: 'Hello!',
 })
+
+const tags = [ 'New' ]
 
 const form = ref ({
   name: "",
@@ -29,7 +31,7 @@ watchEffect (
       message: "Loading item 🧠",
       type: 'warning',
     }
-    itemsStore.fetchItem (
+    itemStore.fetchItem (
       {
         id: route.params.id,
       },
@@ -46,7 +48,7 @@ watchEffect (
       error => {
         snackbar.value = {
           enabled: true,
-          message: `Error loading item: ${JSON.stringify(response.data)} 🎉`,
+          message: `Error loading item: ${JSON.stringify (response.data)} 🎉`,
           type: 'success',
         }
         console.log (error)
@@ -93,7 +95,7 @@ const saveItem = async () => {
     message: "Saving item 🧠",
     type: 'warning',
   }
-  itemsStore.putItem (
+  itemStore.putItem (
     {
       id: route.params.id,
       ...form.value,
@@ -106,7 +108,7 @@ const saveItem = async () => {
         message: "Item saved 🎉",
         type: 'success',
       }
-      setTimeout(
+      setTimeout (
         () => {
           router.push ({
             'name': 'items',
@@ -187,6 +189,30 @@ const saveItem = async () => {
                     item-title="name"
                     label="State"
                   />
+                </VCol>
+
+                <VCol
+                  cols="12"
+                  md="6"
+                >
+                  <VCombobox
+                    v-model="form.tags"
+                    :items="tags"
+                    label="Tags"
+                    multiple
+                  >
+                    <template #selection="{ item }">
+                      <VChip class="mt-1">
+                        <VAvatar
+                          start
+                          color="primary"
+                        >
+                          {{ String (item.title).charAt (0).toUpperCase () }}
+                        </VAvatar>
+                        {{ item.title }}
+                      </VChip>
+                    </template>
+                  </VCombobox>
                 </VCol>
                 <VCol
                   cols="12"

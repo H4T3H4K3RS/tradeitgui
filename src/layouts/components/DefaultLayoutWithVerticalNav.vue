@@ -12,7 +12,6 @@ import { VerticalNavLayout } from '@layouts'
 
 const { appRouteTransition, isLessThanOverlayNavBreakpoint } = useThemeConfig ()
 const { width: windowWidth } = useWindowSize ()
-import { useDefaultStore } from "@/stores/useDefaultStore"
 import { useAuthStore } from "@/stores/useAuthStore"
 import { isNavLinkActive } from "@layouts/utils"
 

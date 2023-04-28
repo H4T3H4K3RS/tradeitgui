@@ -11,7 +11,6 @@ import { HorizontalNavLayout } from '@layouts'
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
 
 const { appRouteTransition } = useThemeConfig ()
-import { useDefaultStore } from "@/stores/useDefaultStore"
 import { useAuthStore } from "@/stores/useAuthStore"
 import { isNavLinkActive } from "@layouts/utils"
 
