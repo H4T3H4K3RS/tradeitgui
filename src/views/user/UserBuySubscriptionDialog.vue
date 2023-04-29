@@ -1,32 +1,22 @@
 <script setup>
-const props = defineProps({
+const props = defineProps ({
   isDialogVisible: {
     type: Boolean,
     required: true,
   },
+  item: {
+    type: Object,
+    required: true,
+  },
 })
 
-const emit = defineEmits(['update:isDialogVisible'])
+const emit = defineEmits ([ 'update:isDialogVisible' ])
 
-const selectedPlan = ref('monthly')
+const selectedPlan = ref ('monthly')
 
-const plansList = [
-  {
-    text: 'Monthly - $99/month',
-    value: 'monthly',
-  },
-  {
-    text: 'Enterprise - $499/month',
-    value: 'enterprise',
-  },
-  {
-    text: 'Company - $999/month',
-    value: 'company',
-  },
-]
 
 const dialogModelValueUpdate = val => {
-  emit('update:isDialogVisible', val)
+  emit ('update:isDialogVisible', val)
 }
 </script>
 
@@ -43,11 +33,11 @@ const dialogModelValueUpdate = val => {
     <VCard class="py-8">
       <VCardItem class="text-center">
         <VCardTitle class="text-h5 mb-5">
-          Buy Subscription
+          Report
         </VCardTitle>
 
         <p>
-          Choose the best subscription for you.
+          Write a report
         </p>
       </VCardItem>
 

@@ -28,7 +28,7 @@ const login = async () => {
   let response
   try {
     response = await authStore.login (form.value)
-    console.log(response.data)
+    console.log (response.data)
     if (!response.data.access) {
       isError.value = true
       errorMessage.value = response.data
@@ -54,7 +54,13 @@ const login = async () => {
     return
   }
   authStore.$state.userData = response.data
-  router.go (0)
+
+  setTimeout (
+    () => {
+      router.push ({ "name": 'index' })
+    },
+    1000,
+  )
 }
 </script>
 
@@ -95,7 +101,7 @@ const login = async () => {
             Добро пожаловать!
           </h5>
           <p class="mb-0">
-            Пожалуйста авторизуйтесь, чтобы начать обмениваться
+            Пожалуйста авторизуйтесь, чтобы начать заботиться о природе
           </p>
         </VCardText>
 
@@ -178,5 +184,5 @@ const login = async () => {
 
 <route lang="yaml">
 meta:
-  title: Login
+title: Login
 </route>

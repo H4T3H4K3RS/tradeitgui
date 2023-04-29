@@ -1,10 +1,10 @@
 <script setup>
-import { useItemStore, useWishStore } from "@/stores/useRest"
+import { useItemStore } from "@/stores/useRest"
 import { useAuthStore } from "@/stores/useAuthStore"
+import { capitalize } from "vue"
 
 const router = useRouter ()
 const itemStore = useItemStore ()
-const wishStore = useWishStore ()
 const authStore = useAuthStore ()
 const data = ref (null)
 
@@ -96,21 +96,39 @@ watchEffect (
           </VCardText>
           <VCardText>
             Category:
-            <VBtn
+            <VChip
+              color="warning"
               variant="tonal"
-              :to="{name: 'index'}"
             >
-              {{ item.category }}
-            </VBtn>
+              <!--            <VChip -->
+              <!--              color="warning" -->
+              <!--              variant="tonal" -->
+              <!--              :to="{name: 'index'}" -->
+              <!--            > -->
+              {{ capitalize (item.category) }}
+            </VChip>
+          </VCardText>
+          <VCardText>
+            Tags:
+            <VChip
+              v-for="(tag, i) in item.tags"
+              :key="i"
+              variant="tonal"
+              class="me-1"
+            >
+              {{ tag }}
+            </VChip>
           </VCardText>
           <VCardActions>
-            <VBtn
+            <VChip
+              size="large"
+              color="primary"
               variant="flat"
               :to="{name: 'items-view-id', params: {id: item.id}}"
               append-icon="tabler-eye"
             >
               View
-            </VBtn>
+            </VChip>
             <VSpacer />
             <div>
               <VIcon

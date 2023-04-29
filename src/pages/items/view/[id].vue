@@ -1,8 +1,11 @@
 <script setup>
 import { urlValidator } from '@core/utils/validators'
-import { useItemStore, useWishStore } from "@/stores/useRest"
+import { useItemStore, useReportStore, useWishStore } from "@/stores/useRest"
 import PhotoList from "@/views/items/PhotoList.vue"
+import { capitalize } from "vue"
+import CreateReportDialog from "@/views/report/CreateReportDialog.vue"
 
+const isCreateReportDialogVisible = ref (false)
 const router = useRouter ()
 const route = useRoute ()
 const tab = ref ('base-info')
@@ -157,48 +160,105 @@ const prepareUrl = title => {
             <span class="text-h6">
               {{ item.name }}
 
-              <VBtn
-                class="float-end"
+              <VChip
+                color="info"
+                class="float-end me-1 mt-1"
+                append-icon="tabler-share-2"
+              >
+                Share
+              </VChip><VChip
+                color="primary"
+                class="float-end me-1 mt-1"
+                append-icon="tabler-arrows-exchange"
+              >
+                Trade
+              </VChip>
+              <VChip
+                class="float-end me-1 mt-1"
                 append-icon="tabler-pencil"
               >
                 Message
-              </VBtn>
+              </VChip>
+              <VChip
+                color="warning"
+                class="float-end me-1 mt-1"
+                append-icon="tabler-alert-triangle"
+                @click="isCreateReportDialogVisible = true"
+              >
+                Report
+              </VChip>
             </span>
             <span>
-              <VBtn
+              <VChip
                 v-if="!wish"
                 color="success"
-                class="float-end me-3"
+                class="float-end me-1 mt-1"
                 append-icon="tabler-plus"
                 @click="addToWhitelist"
               >
                 Add to wishlist
-              </VBtn>
-              <VBtn
+              </VChip>
+              <VChip
                 v-else
                 color="error"
-                class="float-end me-3"
+                class="float-end me-1 mt-1"
                 append-icon="tabler-x"
                 @click="deleteFromWhitelist"
               >
                 Delete from wishlist
-              </VBtn>
+              </VChip>
             </span>
           </VCardText>
           <VCardText>
+            <span
+              class="font-weight-bold text-white text-h6"
+            >
+              Description:
+            </span>
             {{ item.description }}
           </VCardText>
           <VCardText>
-            Category:
-            <VBtn
-              variant="tonal"
-              :to="{name: 'index'}"
+            <span
+              class="font-weight-bold text-white text-h6"
             >
-              {{ item.category }}
-            </VBtn>
+              Category:
+            </span>
+            <VChip
+              color="warning"
+              variant="tonal"
+            >
+              {{ capitalize (item.category) }}
+            </VChip>
+          </VCardText>
+          <VCardText>
+            <span
+              class="font-weight-bold text-white text-h6"
+            >
+              Tags:
+            </span>
+            <template
+              v-if="item.tags"
+            >
+              <VChip
+                v-for="(tag, i) in item.tags"
+                :key="i"
+                variant="tonal"
+                class="me-1"
+              >
+                {{ tag }}
+              </VChip>
+            </template>
+
+            <template v-else>
+              <VChip
+                variant="tonal"
+                class="me-1"
+              >
+                No tags
+              </VChip>
+            </template>
           </VCardText>
         </VCol>
-
         <VCol
           cols="12"
           sm="4"
@@ -209,5 +269,9 @@ const prepareUrl = title => {
         </VCol>
       </VRow>
     </VCard>
+    <CreateReportDialog
+      v-model:isDialogVisible="isCreateReportDialogVisible"
+      v-model:item="item"
+    />
   </div>
 </template>

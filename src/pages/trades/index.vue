@@ -16,12 +16,12 @@ const tab = ref ('draft')
 //   },
 // ])
 
-import { useWishStore } from "@/stores/useRest"
+import { useTradeStore } from "@/stores/useRest"
 import { useAuthStore } from "@/stores/useAuthStore"
 
 const router = useRouter ()
 
-const wishStore = useWishStore ()
+const tradeStore = useTradeStore ()
 const authStore = useAuthStore ()
 const isSnackbarEnabled = ref (false)
 const snackbarMessage = ref ("")

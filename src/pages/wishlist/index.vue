@@ -57,7 +57,7 @@ watchEffect (
     data.value = null
     wishStore.fetchItems (
       {
-        user: authStore.$state.userData.id,
+        // user: authStore.$state.userData.id,
       },
     ).then (
       response => {

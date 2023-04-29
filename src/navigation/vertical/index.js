@@ -32,13 +32,13 @@ export default [
   {
     title: 'Список Желаний',
     icon: { icon: 'tabler-heart' },
-    children: [
-      {
-        title: 'Список',
-        icon: { icon: 'tabler-list' },
-        to: { name: 'wishlist' },
-      },
-    ],
+    to: { name: 'wishlist' },
+    role: 1,
+  },
+  {
+    title: 'Жалобы',
+    icon: { icon: 'tabler-alert-triangle' },
+    to: { name: 'report' },
     role: 1,
   },
 ]
