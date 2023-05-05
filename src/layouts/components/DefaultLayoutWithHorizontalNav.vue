@@ -17,7 +17,12 @@ import { isNavLinkActive } from "@layouts/utils"
 
 const authStore = useAuthStore ()
 
-let navItemsFiltered = navItems.filter (navItem => authStore.$state.userData.role >= navItem.role)
+let navItemsFiltered = ref ([])
+watchEffect (
+  () => {
+    navItemsFiltered.value = navItems.filter (navItem => (!navItem.role || authStore.userData.role >= navItem.role))
+  },
+)
 </script>
 
 <template>

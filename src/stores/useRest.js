@@ -1,26 +1,20 @@
 import { defineStore } from 'pinia'
 import instance from '@/services/api'
 
-function createStore (resource) {
+const createStore = resource => {
   return defineStore ({
-    id: `${resource}Store`,
-    actions: {
+    id: `${resource}Store`, actions: {
       fetchItems (params) {
         return instance.get (`/${resource}`, { params })
-      },
-      fetchItem (params) {
+      }, fetchItem (params) {
         return instance.get (`/${resource}/${params.id}`, { params })
-      },
-      postItem (params) {
+      }, postItem (params) {
         return instance.post (`/${resource}/`, params)
-      },
-      patchItem (params) {
+      }, patchItem (params) {
         return instance.patch (`/${resource}/${params.id}/`, params)
-      },
-      putItem (params) {
+      }, putItem (params) {
         return instance.put (`/${resource}/${params.id}/`, params)
-      },
-      deleteItem (params) {
+      }, deleteItem (params) {
         return instance.delete (`/${resource}/${params.id}/`, { params })
       },
     },

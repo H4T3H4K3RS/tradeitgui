@@ -11,9 +11,13 @@ const route = useRoute ()
 const tab = ref ('base-info')
 const itemStore = useItemStore ()
 const wishStore = useWishStore ()
-const isSnackbarEnabled = ref (false)
-const snackbarMessage = ref ("")
-const snackbarType = ref ("error")
+
+const snackbar = ref ({
+  enabled: false,
+  type: 'success',
+  message: 'Hello!',
+})
+
 const wishItems = ref ([])
 
 const item = ref ({
@@ -31,15 +35,20 @@ const addToWhitelist = () => {
   }).then (
     response => {
       wishItems.value.push (response.data)
-      isSnackbarEnabled.value = true
-      snackbarType.value = 'success'
-      snackbarMessage.value = 'Предмет добавлен в список желаний 🎉'
+      snackbar.value = {
+        enabled: true,
+        message: 'Предмет добавлен в список желаний 🎉',
+        type: 'success',
+      }
+      item.value.presented_in_wish_list = false
     },
   ).catch (
     error => {
-      isSnackbarEnabled.value = true
-      snackbarType.value = 'error'
-      snackbarMessage.value = error
+      snackbar.value = {
+        enabled: true,
+        message: error,
+        type: 'error',
+      }
       console.log (error)
     },
   )
@@ -51,15 +60,20 @@ const deleteFromWhitelist = () => {
   }).then (
     response => {
       wishItems.value = wishItems.value.filter (item => item.id !== wish.value.id)
-      isSnackbarEnabled.value = true
-      snackbarType.value = 'warning'
-      snackbarMessage.value = 'Предмет удалён из списка желаний 🎉'
+      snackbar.value = {
+        enabled: true,
+        message: 'Предмет удалён из списка желаний 🎉',
+        type: 'warning',
+      }
+      item.value.presented_in_wish_list = false
     },
   ).catch (
     error => {
-      isSnackbarEnabled.value = true
-      snackbarType.value = 'error'
-      snackbarMessage.value = error
+      snackbar.value = {
+        enabled: true,
+        message: error,
+        type: 'error',
+      }
       console.log (error)
     },
   )
@@ -76,9 +90,11 @@ watchEffect (
       },
     ).catch (
       error => {
-        isSnackbarEnabled.value = true
-        snackbarType.value = 'error'
-        snackbarMessage.value = error
+        snackbar.value = {
+          enabled: true,
+          message: error,
+          type: 'error',
+        }
         console.log (error)
       },
     )
@@ -88,9 +104,12 @@ watchEffect (
 watchEffect (
   () => {
     if (!route.params.id) return
-    isSnackbarEnabled.value = true
-    snackbarType.value = 'warning'
-    snackbarMessage.value = 'Загрузка предмета'
+
+    snackbar.value = {
+      enabled: true,
+      message: 'Загрузка предмета',
+      type: 'warning',
+    }
     itemStore.fetchItem (
       {
         id: route.params.id,
@@ -98,29 +117,25 @@ watchEffect (
     ).then (
       response => {
         item.value = response.data
-        isSnackbarEnabled.value = true
-        snackbarType.value = 'success'
-        snackbarMessage.value = 'Предмет загружен 🎉'
+
+        snackbar.value = {
+          enabled: true,
+          message: 'Предмет загружен 🎉',
+          type: 'success',
+        }
       },
     ).catch (
       error => {
-        isSnackbarEnabled.value = true
-        snackbarType.value = 'error'
-        snackbarMessage.value = error
+        snackbar.value = {
+          enabled: true,
+          message: error,
+          type: 'error',
+        }
         console.log (error)
       },
     )
   },
 )
-
-// const wishAdded = computed (
-//   () => {
-//     let value = wishItems.value.some (obj => obj.id === item.value.id)
-//     =console.log (value)
-//
-//     return value
-//   },
-// )
 
 const wish = computed (
   () => {
@@ -141,12 +156,12 @@ const prepareUrl = title => {
 <template>
   <div>
     <VSnackbar
-      v-model="isSnackbarEnabled"
+      v-model="snackbar.enabled"
       location="top end"
       variant="flat"
-      :color="snackbarType"
+      :color="snackbar.type"
     >
-      {{ snackbarMessage }}
+      {{ snackbar.message }}
     </VSnackbar>
     <VCard>
       <VRow no-gutters>
@@ -190,7 +205,7 @@ const prepareUrl = title => {
             </span>
             <span>
               <VChip
-                v-if="!wish"
+                v-if="!item.presented_in_wish_list"
                 color="success"
                 class="float-end me-1 mt-1"
                 append-icon="tabler-plus"
@@ -211,7 +226,7 @@ const prepareUrl = title => {
           </VCardText>
           <VCardText>
             <span
-              class="font-weight-bold text-white text-h6"
+              class="font-weight-bold text-h6"
             >
               Description:
             </span>
@@ -219,7 +234,7 @@ const prepareUrl = title => {
           </VCardText>
           <VCardText>
             <span
-              class="font-weight-bold text-white text-h6"
+              class="font-weight-bold text-h6"
             >
               Category:
             </span>
@@ -232,7 +247,7 @@ const prepareUrl = title => {
           </VCardText>
           <VCardText>
             <span
-              class="font-weight-bold text-white text-h6"
+              class="font-weight-bold text-h6"
             >
               Tags:
             </span>

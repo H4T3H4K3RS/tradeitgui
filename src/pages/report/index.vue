@@ -26,9 +26,6 @@ const router = useRouter ()
 
 const reportStore = useReportStore ()
 const authStore = useAuthStore ()
-const isSnackbarEnabled = ref (false)
-const snackbarMessage = ref ("")
-const snackbarType = ref ("error")
 const data = ref (null)
 const rowPerPage = ref (10)
 const currentPage = ref (1)
@@ -40,6 +37,14 @@ const loadMessage = ref ({
   message: "Загружаем данные...",
   status: 0,
 })
+
+const snackbar = ref ({
+  enabled: false,
+  type: 'success',
+  message: 'Hello!',
+})
+
+const reportPreset = ref ({})
 
 watchEffect (
   () => {
@@ -70,9 +75,11 @@ watchEffect (
       },
     ).catch (
       error => {
-        isSnackbarEnabled.value = true
-        snackbarType.value = 'error'
-        snackbarMessage.value = error
+        snackbar.value = {
+          enabled: true,
+          message: error,
+          type: 'error',
+        }
         console.log (error)
       },
     )
@@ -108,6 +115,14 @@ const formatTimestamp = timestamp => {
   return date.slice (0, -5).replaceAll ("T", " ").replaceAll ("-", ".")
 }
 
+watchEffect (
+  () => {
+    console.log (reportPreset.value)
+    reportPreset.value = isCreateReportDialogVisible.value ? reportPreset.value : {}
+    console.log (reportPreset.value)
+  },
+)
+
 const deleteItem = async id => {
   reportStore.deleteItem (
     {
@@ -120,15 +135,19 @@ const deleteItem = async id => {
       if (response.status > 250) {
         throw `Failed to save! Response: ${JSON.stringify (response.data)}`
       }
-      isSnackbarEnabled.value = true
-      snackbarType.value = 'success'
-      snackbarMessage.value = `Report ${id} deleted`
+      snackbar.value = {
+        enabled: true,
+        message: `Report ${id} deleted`,
+        type: 'success',
+      }
     },
   ).catch (
     error => {
-      isSnackbarEnabled.value = true
-      snackbarType.value = 'error'
-      snackbarMessage.value = error
+      snackbar.value = {
+        enabled: true,
+        message: error,
+        type: 'error',
+      }
       console.log (error)
     },
   )
@@ -138,12 +157,12 @@ const deleteItem = async id => {
 <template>
   <div>
     <VSnackbar
-      v-model="isSnackbarEnabled"
+      v-model="snackbar.enabled"
       location="top end"
       variant="flat"
-      :color="snackbarType"
+      :color="snackbar.type"
     >
-      {{ snackbarMessage }}
+      {{ snackbar.message }}
     </VSnackbar>
     <VTabs
       v-model="tab"
@@ -188,6 +207,12 @@ const deleteItem = async id => {
                   >
                     Message
                   </th>
+                  <!--                  <th -->
+                  <!--                    scope="col" -->
+                  <!--                    class="text-subtitle-2 text-wrap" -->
+                  <!--                  > -->
+                  <!--                    Status -->
+                  <!--                  </th> -->
                   <th
                     scope="col"
                     class="text-subtitle-2 text-wrap"
@@ -223,6 +248,9 @@ const deleteItem = async id => {
                   <td class="text-high-emphasis">
                     {{ item.message }}
                   </td>
+                  <!--                  <td class="text-high-emphasis"> -->
+                  <!--                    {{ item.status }} -->
+                  <!--                  </td> -->
                   <td class="text-high-emphasis">
                     {{ formatTimestamp (item.time_modified) }}
                   </td>
@@ -235,6 +263,7 @@ const deleteItem = async id => {
                       size="x-small"
                       color="default"
                       variant="text"
+                      @click="isCreateReportDialogVisible = true; reportPreset = item"
                     >
                       <VIcon
                         size="22"
@@ -289,6 +318,7 @@ const deleteItem = async id => {
     </VCard>
     <CreateReportDialog
       v-model:isDialogVisible="isCreateReportDialogVisible"
+      v-model:report="reportPreset"
     />
   </div>
 </template>

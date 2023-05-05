@@ -88,7 +88,7 @@ watchEffect (
           />
 
           <VCardItem>
-            <VCardTitle>{{ item.name }}t</VCardTitle>
+            <VCardTitle>{{ item.name }}</VCardTitle>
           </VCardItem>
 
           <VCardText>
@@ -120,15 +120,19 @@ watchEffect (
             </VChip>
           </VCardText>
           <VCardActions>
-            <VChip
-              size="large"
-              color="primary"
-              variant="flat"
+            <RouterLink
               :to="{name: 'items-view-id', params: {id: item.id}}"
-              append-icon="tabler-eye"
             >
-              View
-            </VChip>
+              <VChip
+                class="cursor-pointer"
+                size="large"
+                color="primary"
+                variant="flat"
+                append-icon="tabler-eye"
+              >
+                View
+              </VChip>
+            </RouterLink>
             <VSpacer />
             <div>
               <VIcon

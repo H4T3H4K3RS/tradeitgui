@@ -36,15 +36,14 @@ const loadMessage = ref ({
   status: 0,
 })
 
-watchEffect(
+watchEffect (
   () => {
     if (data.value === null) {
       loadMessage.value = {
         message: "Загружаем данные...",
         status: 0,
       }
-    }
-    else if (data.value.length === 0) {
+    } else if (data.value.length === 0) {
       loadMessage.value = {
         message: "Нет данных",
         status: 2,
@@ -113,8 +112,8 @@ const deleteItem = async id => {
     response => {
       console.log (response.data)
       data.value = data.value.filter (item => item.id !== id)
-      if (response.status > 250){
-        throw `Failed to save! Response: ${JSON.stringify(response.data)}`
+      if (response.status > 250) {
+        throw `Failed to save! Response: ${JSON.stringify (response.data)}`
       }
       isSnackbarEnabled.value = true
       snackbarType.value = 'success'
@@ -201,6 +200,12 @@ const deleteItem = async id => {
                     scope="col"
                     class="text-subtitle-2 text-wrap"
                   >
+                    Status
+                  </th>
+                  <th
+                    scope="col"
+                    class="text-subtitle-2 text-wrap"
+                  >
                     Modified date
                   </th>
                   <th
@@ -238,6 +243,14 @@ const deleteItem = async id => {
                   </td>
                   <td class="text-high-emphasis">
                     {{ item.photos.length }}
+                  </td>
+                  <td class="text-high-emphasis">
+                    <VChip
+                      variant="tonal"
+                      :color="item.moderation_state === 'Accepted' ? 'success' : (item.moderation_state === 'Pending' ? 'warning' : 'error')"
+                    >
+                      {{ item.moderation_state }}
+                    </VChip>
                   </td>
                   <td class="text-high-emphasis">
                     {{ formatTimestamp (item.time_modified) }}

@@ -8,6 +8,14 @@ const props = defineProps ({
   },
   item: {
     type: Object,
+    default: () => {
+    },
+    required: false,
+  },
+  report: {
+    type: Object,
+    default: () => {
+    },
     required: false,
   },
 })
@@ -62,6 +70,8 @@ const createReport = () => {
 watchEffect (
   () => {
     report.value.message = props.item && props.item.id ? `Жалоба на объявление #${props.item.id}\n\n>` : ``
+    report.value = props.report ? props.report : report.value
+    console.log (report.value)
   },
 )
 
@@ -109,10 +119,26 @@ const dialogModelValueUpdate = val => {
         </VCardText>
         <VCardText class="px-15">
           <div class="d-flex justify-center flex-wrap">
+            <!--            <VBtn -->
+            <!--              color="success" -->
+            <!--              variant="tonal" -->
+            <!--              class="mt-3" -->
+            <!--              :disabled="props.report" -->
+            <!--              :append-icon="props.report ? -->
+            <!--                ( -->
+            <!--                  report.status === 'Accepted' ? -->
+            <!--                    'tabler-checks' : -->
+            <!--                    (report.status === 'Declined' ? 'tabler-circle-x-filled' : 'tabler-search')) : 'tabler-send'" -->
+            <!--              @click="createReport" -->
+            <!--            > -->
+            <!--              {{report ? props.report.status : 'Send'}} -->
+            <!--            </VBtn> -->
             <VBtn
               color="success"
               variant="tonal"
               class="mt-3"
+              :disabled="props.report"
+              append-icon="tabler-send"
               @click="createReport"
             >
               Send

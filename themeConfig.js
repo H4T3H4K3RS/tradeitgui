@@ -7,16 +7,16 @@ import { defineThemeConfig } from '@core'
 import { RouteTransitions, Skins } from '@core/enums'
 import { AppContentLayoutNav, ContentWidth, FooterType, NavbarType } from '@layouts/enums'
 
-export const { themeConfig, layoutConfig } = defineThemeConfig({
+export const { themeConfig, layoutConfig } = defineThemeConfig ({
   app: {
     title: 'TradeIT',
     slogan: "&dash; Trade Your Property &dash;",
-    logo: h('div', { innerHTML: logo, style: 'line-height:0; color: rgb(var(--v-global-theme-primary));' }),
+    logo: h ('div', { innerHTML: logo, style: 'line-height:0; color: rgb(var(--v-global-theme-primary));' }),
     contentWidth: ContentWidth.Boxed,
     contentLayoutNav: AppContentLayoutNav.Horizontal,
     overlayNavFromBreakpoint: breakpointsVuetify.md + 16,
     enableI18n: false,
-    theme: 'custom',
+    theme: 'light',
     isRtl: false,
     skin: Skins.Default,
     routeTransition: RouteTransitions.Fade,

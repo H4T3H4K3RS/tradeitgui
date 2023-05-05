@@ -7,8 +7,7 @@ export default {
       "items-edit-id": 1,
       "items-new": 1,
       "items": 1,
-      "items-id": 1,
-      "products": 1,
+      "items-id": 0,
     },
-  loginPath: "auth-login",
+  loginPath: "auth  -login",
 }
