@@ -1,1 +1,0 @@
-import{v as s,k as a,q as o,o as r,b as u,b8 as n,aY as c,bk as _}from"./index.0f395c90.js";const k={__name:"index",setup(m){_();const e=s(),t=a();return a(null),e.me().then(()=>{t.value=e.$state.userData}),(l,p)=>o(t)?(r(),u(n,{key:0})):c("",!0)}};export{k as default};
