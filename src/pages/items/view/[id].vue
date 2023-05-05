@@ -38,7 +38,7 @@ const addToWhitelist = () => {
     response => {
       snackbar.value = {
         enabled: true,
-        message: 'Предмет добавлен в список желаний 🎉',
+        message: 'Предмет добавлен в избранное 🎉',
         type: 'success',
       }
       item.value.presented_in_wish_list = true

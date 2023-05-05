@@ -30,7 +30,19 @@ export default [
     role: 1,
   },
   {
-    title: 'Список Желаний',
+    title: 'Обмены',
+    icon: { icon: 'tabler-replace' },
+    to: { name: 'trade' },
+    role: 1,
+  },
+  {
+    title: 'Сообщения',
+    icon: { icon: 'tabler-messages' },
+    to: { name: 'message' },
+    role: 1,
+  },
+  {
+    title: 'Избранное',
     icon: { icon: 'tabler-heart' },
     to: { name: 'wishlist' },
     role: 1,
