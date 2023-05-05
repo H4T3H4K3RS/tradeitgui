@@ -11,6 +11,7 @@
     "dependencies": {
         "@casl/ability": "^6.2.0",
         "@casl/vue": "^2.2.0",
+        "@chenfengyuan/vue-qrcode": "^2.0.0",
         "@floating-ui/dom": "1.0.4",
         "@tabler/icons": "^1.97.0",
         "@vueuse/core": "^9.5.0",
@@ -23,6 +24,7 @@
         "jwt-decode": "^3.1.2",
         "pinia": "^2.0.24",
         "prismjs": "^1.29.0",
+        "qrcode": "^1.5.3",
         "roboto-fontface": "^0.10.0",
         "sass": "^1.56.1",
         "unplugin-vue-define-options": "^0.12.8",

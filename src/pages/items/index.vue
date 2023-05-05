@@ -1,7 +1,11 @@
 <script setup>
-const tab = ref ('draft')
+const tab = ref ('exposed')
 
 const tabs = ref ([
+  {
+    name: 'Exposed',
+    value: "exposed",
+  },
   {
     name: 'Draft',
     value: "draft",
@@ -9,10 +13,6 @@ const tabs = ref ([
   {
     name: 'Exchnaged',
     value: "exchanged",
-  },
-  {
-    name: 'Exposed',
-    value: "exposed",
   },
 ])
 
@@ -22,9 +22,6 @@ import { useAuthStore } from "@/stores/useAuthStore"
 const router = useRouter ()
 const itemStore = useItemStore ()
 const authStore = useAuthStore ()
-const isSnackbarEnabled = ref (false)
-const snackbarMessage = ref ("")
-const snackbarType = ref ("error")
 const data = ref (null)
 const rowPerPage = ref (10)
 const currentPage = ref (1)
@@ -34,6 +31,12 @@ const total = ref (0)
 const loadMessage = ref ({
   message: "Загружаем данные...",
   status: 0,
+})
+
+const snackbar = ref ({
+  enabled: false,
+  type: 'success',
+  message: 'Hello!',
 })
 
 watchEffect (
@@ -65,10 +68,11 @@ watchEffect (
       },
     ).catch (
       error => {
-        isSnackbarEnabled.value = true
-        snackbarType.value = 'error'
-        snackbarMessage.value = error
-        console.log (error)
+        snackbar.value = {
+          enabled: true,
+          message: error,
+          type: 'error',
+        }
       },
     )
   },
@@ -82,7 +86,7 @@ const paginationData = computed (() => {
   const firstIndex = data.value ? (data.value.length ? (currentPage.value - 1) * rowPerPage.value + 1 : 0) : 0
   const lastIndex = data.value ? (data.value.length + (currentPage.value - 1) * rowPerPage.value) : 0
 
-  return `Showing ${firstIndex} to ${lastIndex} of ${total.value} entries`
+  return `Показаны с ${firstIndex} по ${lastIndex} из ${total.value} строк`
 })
 
 const formatFloat = number => {
@@ -113,18 +117,22 @@ const deleteItem = async id => {
       console.log (response.data)
       data.value = data.value.filter (item => item.id !== id)
       if (response.status > 250) {
-        throw `Failed to save! Response: ${JSON.stringify (response.data)}`
+        throw response.data
       }
-      isSnackbarEnabled.value = true
-      snackbarType.value = 'success'
-      snackbarMessage.value = `Item ${id} deleted`
+
+      snackbar.value = {
+        enabled: true,
+        message: `Предмет ${id} удалён`,
+        type: 'success',
+      }
     },
   ).catch (
     error => {
-      isSnackbarEnabled.value = true
-      snackbarType.value = 'error'
-      snackbarMessage.value = error
-      console.log (error)
+      snackbar.value = {
+        enabled: true,
+        message: `Ошибка удаления предмета: ${error}`,
+        type: 'error',
+      }
     },
   )
 }
@@ -133,12 +141,12 @@ const deleteItem = async id => {
 <template>
   <div>
     <VSnackbar
-      v-model="isSnackbarEnabled"
+      v-model="snackbar.enabled"
       location="top end"
       variant="flat"
-      :color="snackbarType"
+      :color="snackbar.type"
     >
-      {{ snackbarMessage }}
+      {{ snackbar.message }}
     </VSnackbar>
     <VTabs
       v-model="tab"
@@ -156,7 +164,7 @@ const deleteItem = async id => {
         :to="{name: 'items-new'}"
         append-icon="tabler-plus"
       >
-        New
+        Разместить
       </VBtn>
     </VTabs>
 
@@ -182,43 +190,43 @@ const deleteItem = async id => {
                     scope="col"
                     class="text-subtitle-2 text-wrap"
                   >
-                    Name
+                    Название
                   </th>
                   <th
                     scope="col"
                     class="text-subtitle-2 text-wrap"
                   >
-                    Description
+                    Описание
                   </th>
                   <th
                     scope="col"
                     class="text-subtitle-2 text-wrap"
                   >
-                    Photos Count
+                    Количество Фото
                   </th>
                   <th
                     scope="col"
                     class="text-subtitle-2 text-wrap"
                   >
-                    Status
+                    Статус
                   </th>
                   <th
                     scope="col"
                     class="text-subtitle-2 text-wrap"
                   >
-                    Modified date
+                    Дата Изменения
                   </th>
                   <th
                     scope="col"
                     class="text-subtitle-2 text-wrap"
                   >
-                    Creation date
+                    Дата Создания
                   </th>
                   <th
                     scope="col"
                     class="text-subtitle-2 text-wrap"
                   >
-                    Actions
+                    Действия
                   </th>
                 </tr>
               </thead>

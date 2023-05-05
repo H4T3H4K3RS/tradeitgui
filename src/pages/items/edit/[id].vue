@@ -48,8 +48,8 @@ watchEffect (
       error => {
         snackbar.value = {
           enabled: true,
-          message: `Error loading item: ${JSON.stringify (response.data)} 🎉`,
-          type: 'success',
+          message: error,
+          type: 'error',
         }
         console.log (error)
       },
@@ -142,10 +142,10 @@ const saveItem = async () => {
     </VSnackbar>
     <VTabs v-model="tab">
       <VTab value="base-info">
-        Base Info
+        Основная Информация
       </VTab>
       <VTab value="photos">
-        Photos
+        Фото
       </VTab>
     </VTabs>
     <VDivider />
@@ -162,7 +162,7 @@ const saveItem = async () => {
                 >
                   <VTextField
                     v-model="form.name"
-                    label="Name"
+                    label="Название"
                   />
                 </VCol>
 
@@ -175,7 +175,7 @@ const saveItem = async () => {
                     :items="categoryList"
                     item-value="value"
                     item-title="name"
-                    label="Category"
+                    label="Категория"
                   />
                 </VCol>
                 <VCol
@@ -187,7 +187,7 @@ const saveItem = async () => {
                     :items="stateList"
                     item-value="value"
                     item-title="name"
-                    label="State"
+                    label="Статус"
                   />
                 </VCol>
 
@@ -198,7 +198,7 @@ const saveItem = async () => {
                   <VCombobox
                     v-model="form.tags"
                     :items="tags"
-                    label="Tags"
+                    label="Теги"
                     multiple
                   >
                     <template #selection="{ item }">
@@ -219,7 +219,7 @@ const saveItem = async () => {
                 >
                   <VTextarea
                     v-model="form.description"
-                    label="Description"
+                    label="Описание"
                     rows="3"
                     auto-grow
                   />
@@ -236,7 +236,7 @@ const saveItem = async () => {
             >
               <VTextField
                 v-model="form.photos[i]"
-                :label="`Photo ${i + 1}`"
+                :label="`Фото ${i + 1}`"
                 type="text"
                 append-inner-icon="tabler-trash"
                 :rules="[urlValidator]"
@@ -249,7 +249,7 @@ const saveItem = async () => {
               prepend-icon="tabler-plus"
               @click="form.photos.push('')"
             >
-              Add photo
+              Добавить Фото
             </VBtn>
           </VWindowItem>
         </VWindow>
@@ -259,16 +259,24 @@ const saveItem = async () => {
 
       <VCardText class="d-flex gap-4">
         <VBtn
-          @click="saveItem"
+          variant="tonal"
+          :to="{name: 'items-view-id', params: {id: route.params.id}}"
+          append-icon="tabler-eye"
+          class="cursor-pointer"
         >
-          Submit
+          Просмотр
         </VBtn>
         <VBtn
           color="secondary"
           variant="tonal"
           :to="{name: 'items'}"
         >
-          Cancel
+          Отмена
+        </VBtn>
+        <VBtn
+          @click="saveItem"
+        >
+          Сохранить
         </VBtn>
       </VCardText>
     </VCard>

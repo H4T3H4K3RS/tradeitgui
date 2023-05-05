@@ -102,12 +102,18 @@ const dialogModelValueUpdate = val => {
       <VCard class="py-8">
         <VCardItem class="text-center">
           <VCardTitle class="text-h5 mb-5">
-            Report
+            Жалоба
+            <template v-if="report.id">
+              #{{ report.id }}
+              <VChip
+                size="large"
+                variant="tonal"
+                :color="report.state === 'Accepted' ? 'success' : (report.state === 'Pending' ? 'warning' : 'error')"
+              >
+                {{ report.state }}
+              </VChip>
+            </template>
           </VCardTitle>
-
-          <p>
-            Write a report
-          </p>
         </VCardItem>
 
         <VCardText class="d-flex align-center flex-wrap flex-sm-nowrap px-15">
@@ -119,29 +125,15 @@ const dialogModelValueUpdate = val => {
         </VCardText>
         <VCardText class="px-15">
           <div class="d-flex justify-center flex-wrap">
-            <!--            <VBtn -->
-            <!--              color="success" -->
-            <!--              variant="tonal" -->
-            <!--              class="mt-3" -->
-            <!--              :disabled="props.report" -->
-            <!--              :append-icon="props.report ? -->
-            <!--                ( -->
-            <!--                  report.status === 'Accepted' ? -->
-            <!--                    'tabler-checks' : -->
-            <!--                    (report.status === 'Declined' ? 'tabler-circle-x-filled' : 'tabler-search')) : 'tabler-send'" -->
-            <!--              @click="createReport" -->
-            <!--            > -->
-            <!--              {{report ? props.report.status : 'Send'}} -->
-            <!--            </VBtn> -->
             <VBtn
+              v-if="!props.report?.state"
               color="success"
               variant="tonal"
               class="mt-3"
-              :disabled="props.report"
               append-icon="tabler-send"
               @click="createReport"
             >
-              Send
+              Отправить
             </VBtn>
           </div>
         </VCardText>

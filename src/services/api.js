@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "axios"
 
 const instance = axios.create ({
   baseURL: `${import.meta.env.VITE_API_URL}`,
@@ -7,8 +7,8 @@ const instance = axios.create ({
     "ngrok-skip-browser-warning": "69420",
   },
   validateStatus: function (status) {
-    return true;
-  }
-});
+    return true
+  },
+})
 
-export default instance;
+export default instance

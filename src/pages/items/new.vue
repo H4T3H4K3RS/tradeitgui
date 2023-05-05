@@ -9,12 +9,14 @@ const snackbar = ref ({
   type: 'success',
   message: 'Hello!',
 })
+
 const router = useRouter ()
 const itemStore = useItemStore ()
 const authStore = useAuthStore ()
 const tab = ref ('base-info')
 
 const tags = [ 'New' ]
+
 const form = ref ({
   name: "",
   description: "",
@@ -26,26 +28,22 @@ const form = ref ({
 
 const categoryList = [
   {
-    name: 'Clothes',
+    name: 'Одежда',
     value: "clothes",
   },
   {
-    name: 'Accessory',
+    name: 'Аксессуары',
     value: "accessory",
   },
 ]
 
 const stateList = [
   {
-    name: 'Exchnaged',
-    value: "exchanged",
-  },
-  {
-    name: 'Exposed',
+    name: 'Выставить',
     value: "exposed",
   },
   {
-    name: 'Draft',
+    name: 'Черновик',
     value: "draft",
   },
 ]
@@ -71,11 +69,11 @@ const newItem = async () => {
     response => {
       console.log (response.data)
       if (response.status > 250) {
-        throw `Failed to save! Response: ${JSON.stringify (response.data)}`
+        throw `Ошибка сохранения! Ответ: ${JSON.stringify (response.data)}`
       }
       snackbar.value = {
         enabled: true,
-        message: "Item saved 🎉",
+        message: "Предмет сохранён 🎉",
         type: 'success',
       }
       setTimeout (
@@ -91,7 +89,7 @@ const newItem = async () => {
     error => {
       snackbar.value = {
         enabled: true,
-        message: `Error occured: ${error}`,
+        message: error,
         type: 'error',
       }
       console.log (error)
@@ -112,13 +110,13 @@ const newItem = async () => {
     </VSnackbar>
     <VTabs v-model="tab">
       <VTab value="base-info">
-        Base Info
+        Основная Информация
       </VTab>
       <VTab value="photos">
-        Photos
+        Фото
       </VTab>
     </VTabs>
-    <VDivider/>
+    <VDivider />
 
     <VCard flat>
       <VCardText>
@@ -132,7 +130,7 @@ const newItem = async () => {
                 >
                   <VTextField
                     v-model="form.name"
-                    label="Name"
+                    label="Название"
                   />
                 </VCol>
 
@@ -145,7 +143,7 @@ const newItem = async () => {
                     :items="categoryList"
                     item-value="value"
                     item-title="name"
-                    label="Category"
+                    label="Категория"
                   />
                 </VCol>
                 <VCol
@@ -157,7 +155,7 @@ const newItem = async () => {
                     :items="stateList"
                     item-value="value"
                     item-title="name"
-                    label="State"
+                    label="Статус"
                   />
                 </VCol>
                 <VCol
@@ -167,7 +165,7 @@ const newItem = async () => {
                   <VCombobox
                     v-model="form.tags"
                     :items="tags"
-                    label="Tags"
+                    label="Теги"
                     multiple
                   >
                     <template #selection="{ item }">
@@ -188,7 +186,7 @@ const newItem = async () => {
                 >
                   <VTextarea
                     v-model="form.description"
-                    label="Description"
+                    label="Описание"
                     rows="3"
                     auto-grow
                   />
@@ -205,7 +203,7 @@ const newItem = async () => {
             >
               <VTextField
                 v-model="form.photos[i]"
-                :label="`Photo ${i + 1}`"
+                :label="`Фото ${i + 1}`"
                 type="text"
                 append-inner-icon="tabler-trash"
                 :rules="[urlValidator]"
@@ -218,26 +216,26 @@ const newItem = async () => {
               prepend-icon="tabler-plus"
               @click="form.photos.push('')"
             >
-              Add photo
+              Добавить фото
             </VBtn>
           </VWindowItem>
         </VWindow>
       </VCardText>
 
-      <VDivider/>
+      <VDivider />
 
       <VCardText class="d-flex gap-4">
         <VBtn
           @click="newItem"
         >
-          Submit
+          Сохранить
         </VBtn>
         <VBtn
           color="secondary"
           variant="tonal"
           :to="{name: 'items'}"
         >
-          Cancel
+          Отмена
         </VBtn>
       </VCardText>
     </VCard>

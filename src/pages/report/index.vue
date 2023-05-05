@@ -1,21 +1,21 @@
 <script setup>
 import CreateReportDialog from "@/views/report/CreateReportDialog.vue"
 
-const tab = ref ('pending')
+const tab = ref ('Pending')
 const isCreateReportDialogVisible = ref (false)
 
 const tabs = ref ([
   {
     name: 'Pending',
-    value: "pending",
+    value: "Pending",
   },
   {
     name: 'Declined',
-    value: "declined",
+    value: "Declined",
   },
   {
     name: 'Accepted',
-    value: "accepted",
+    value: "Accepted",
   },
 ])
 
@@ -66,7 +66,7 @@ watchEffect (
     data.value = null
     reportStore.fetchItems (
       {
-        // user: authStore.$state.userData.id,
+        state: tab.value,
       },
     ).then (
       response => {
@@ -94,7 +94,7 @@ const paginationData = computed (() => {
   const firstIndex = data.value ? (data.value.length ? (currentPage.value - 1) * rowPerPage.value + 1 : 0) : 0
   const lastIndex = data.value ? (data.value.length + (currentPage.value - 1) * rowPerPage.value) : 0
 
-  return `Showing ${firstIndex} to ${lastIndex} of ${total.value} entries`
+  return `Показаны с ${firstIndex} по ${lastIndex} из ${total.value} строк`
 })
 
 const formatFloat = number => {
@@ -133,11 +133,11 @@ const deleteItem = async id => {
       console.log (response.data)
       data.value = data.value.filter (item => item.id !== id)
       if (response.status > 250) {
-        throw `Failed to save! Response: ${JSON.stringify (response.data)}`
+        throw `Ошибка сохранения: ${JSON.stringify (response.data)}`
       }
       snackbar.value = {
         enabled: true,
-        message: `Report ${id} deleted`,
+        message: `Жалоба ${id} удалена`,
         type: 'success',
       }
     },
@@ -180,7 +180,7 @@ const deleteItem = async id => {
         append-icon="tabler-plus"
         @click="isCreateReportDialogVisible = true"
       >
-        New
+        Создать
       </VBtn>
     </VTabs>
     <VCard flat>
@@ -205,31 +205,31 @@ const deleteItem = async id => {
                     scope="col"
                     class="text-subtitle-2 text-wrap"
                   >
-                    Message
-                  </th>
-                  <!--                  <th -->
-                  <!--                    scope="col" -->
-                  <!--                    class="text-subtitle-2 text-wrap" -->
-                  <!--                  > -->
-                  <!--                    Status -->
-                  <!--                  </th> -->
-                  <th
-                    scope="col"
-                    class="text-subtitle-2 text-wrap"
-                  >
-                    Modified date
+                    Сообщение
                   </th>
                   <th
                     scope="col"
                     class="text-subtitle-2 text-wrap"
                   >
-                    Creation date
+                    Статус
                   </th>
                   <th
                     scope="col"
                     class="text-subtitle-2 text-wrap"
                   >
-                    Actions
+                    Дата изменения
+                  </th>
+                  <th
+                    scope="col"
+                    class="text-subtitle-2 text-wrap"
+                  >
+                    Дата создания
+                  </th>
+                  <th
+                    scope="col"
+                    class="text-subtitle-2 text-wrap"
+                  >
+                    Действия
                   </th>
                 </tr>
               </thead>
@@ -246,11 +246,17 @@ const deleteItem = async id => {
                     {{ item.id }}
                   </td>
                   <td class="text-high-emphasis">
-                    {{ item.message }}
+                    {{ item.message.slice (0, 100) }}
+                    {{ item.message.length > 100 ? '...' : '' }}
                   </td>
-                  <!--                  <td class="text-high-emphasis"> -->
-                  <!--                    {{ item.status }} -->
-                  <!--                  </td> -->
+                  <td class="text-high-emphasis">
+                    <VChip
+                      variant="tonal"
+                      :color="item.state === 'Accepted' ? 'success' : (item.state === 'Pending' ? 'warning' : 'error')"
+                    >
+                      {{ item.state }}
+                    </VChip>
+                  </td>
                   <td class="text-high-emphasis">
                     {{ formatTimestamp (item.time_modified) }}
                   </td>
@@ -263,7 +269,7 @@ const deleteItem = async id => {
                       size="x-small"
                       color="default"
                       variant="text"
-                      @click="isCreateReportDialogVisible = true; reportPreset = item"
+                      @click="isCreateReportDialogVisible = true; reportPreset = JSON.parse(JSON.stringify(item))"
                     >
                       <VIcon
                         size="22"

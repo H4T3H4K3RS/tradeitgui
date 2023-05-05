@@ -1,21 +1,4 @@
 <script setup>
-const tab = ref ('draft')
-
-// const tabs = ref ([
-//   {
-//     name: 'Draft',
-//     value: "draft",
-//   },
-//   {
-//     name: 'Exchnaged',
-//     value: "exchanged",
-//   },
-//   {
-//     name: 'Exposed',
-//     value: "exposed",
-//   },
-// ])
-
 import { useWishStore } from "@/stores/useRest"
 import { useAuthStore } from "@/stores/useAuthStore"
 
@@ -23,9 +6,13 @@ const router = useRouter ()
 
 const wishStore = useWishStore ()
 const authStore = useAuthStore ()
-const isSnackbarEnabled = ref (false)
-const snackbarMessage = ref ("")
-const snackbarType = ref ("error")
+
+const snackbar = ref ({
+  enabled: false,
+  type: 'success',
+  message: 'Hello!',
+})
+
 const data = ref (null)
 const rowPerPage = ref (10)
 const currentPage = ref (1)
@@ -65,10 +52,11 @@ watchEffect (
       },
     ).catch (
       error => {
-        isSnackbarEnabled.value = true
-        snackbarType.value = 'error'
-        snackbarMessage.value = error
-        console.log (error)
+        snackbar.value = {
+          enabled: true,
+          message: `Ошибка загрузки предметов: ${error}`,
+          type: 'error',
+        }
       },
     )
   },
@@ -82,7 +70,7 @@ const paginationData = computed (() => {
   const firstIndex = data.value ? (data.value.length ? (currentPage.value - 1) * rowPerPage.value + 1 : 0) : 0
   const lastIndex = data.value ? (data.value.length + (currentPage.value - 1) * rowPerPage.value) : 0
 
-  return `Showing ${firstIndex} to ${lastIndex} of ${total.value} entries`
+  return `Показаны с ${firstIndex} по ${lastIndex} из ${total.value} строк`
 })
 
 const formatFloat = number => {
@@ -115,15 +103,20 @@ const deleteItem = async id => {
       if (response.status > 250) {
         throw `Failed to save! Response: ${JSON.stringify (response.data)}`
       }
-      isSnackbarEnabled.value = true
-      snackbarType.value = 'success'
-      snackbarMessage.value = `Item ${id} deleted`
+
+      snackbar.value = {
+        enabled: true,
+        message: `Item ${id} deleted`,
+        type: 'success',
+      }
     },
   ).catch (
     error => {
-      isSnackbarEnabled.value = true
-      snackbarType.value = 'error'
-      snackbarMessage.value = error
+      snackbar.value = {
+        enabled: true,
+        message: error,
+        type: 'error',
+      }
       console.log (error)
     },
   )
@@ -133,12 +126,12 @@ const deleteItem = async id => {
 <template>
   <div>
     <VSnackbar
-      v-model="isSnackbarEnabled"
+      v-model="snackbar.enabled"
       location="top end"
       variant="flat"
-      :color="snackbarType"
+      :color="snackbar.type"
     >
-      {{ snackbarMessage }}
+      {{ snackbar.message }}
     </VSnackbar>
     <VCard flat>
       <VCardText>
@@ -156,25 +149,25 @@ const deleteItem = async id => {
                 scope="col"
                 class="text-subtitle-2 text-wrap"
               >
-                Author
+                Название
               </th>
               <th
                 scope="col"
                 class="text-subtitle-2 text-wrap"
               >
-                Modified date
+                Дата Изменения
               </th>
               <th
                 scope="col"
                 class="text-subtitle-2 text-wrap"
               >
-                Creation date
+                Дата Создания
               </th>
               <th
                 scope="col"
                 class="text-subtitle-2 text-wrap"
               >
-                Actions
+                Действия
               </th>
             </tr>
           </thead>
@@ -191,7 +184,16 @@ const deleteItem = async id => {
                 {{ item.id }}
               </td>
               <td class="text-high-emphasis">
-                {{ item.author }}
+                <RouterLink
+                  :to="{name: 'items-view-id', params: {id: item.item}}"
+                >
+                  <VChip
+                    class="cursor-pointer"
+                    color="primary"
+                  >
+                    TODO {{ item.item }}
+                  </VChip>
+                </RouterLink>
               </td>
               <td class="text-high-emphasis">
                 {{ formatTimestamp (item.time_modified) }}

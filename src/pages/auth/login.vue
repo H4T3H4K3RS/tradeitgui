@@ -9,8 +9,11 @@ import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
 import { themeConfig } from '@themeConfig'
 import { useAuthStore } from "@/stores/useAuthStore"
 
-const isError = ref (false)
-const errorMessage = ref ("")
+const snackbar = ref ({
+  enabled: false,
+  type: 'success',
+  message: 'Hello!',
+})
 
 const form = ref ({
   // email: '',
@@ -26,18 +29,25 @@ const authStore = useAuthStore ()
 
 const login = async () => {
   let response
+  console.log ("BBBB")
   try {
     response = await authStore.login (form.value)
-    console.log (response.data)
-    if (!response.data.access) {
-      isError.value = true
-      errorMessage.value = response.data
+    console.log (response.status)
+    if (!response.data || !response.data?.access) {
+      snackbar.value = {
+        enabled: true,
+        message: `Ошибка входа: ${response.data}`,
+        type: 'error',
+      }
 
       return
     }
   } catch (e) {
-    isError.value = true
-    errorMessage.value = e.message
+    snackbar.value = {
+      enabled: true,
+      message: e.data,
+      type: 'error',
+    }
 
     return
   }
@@ -46,15 +56,26 @@ const login = async () => {
       access: `${response.data.access}`,
       refresh: `${response.data.refresh}`,
     }
-  response = (await authStore.me ())
+  response = await authStore.me ()
   if (response.data.error) {
-    isError.value = true
-    errorMessage.value = response.data
+    console.log ("AAA")
+    snackbar.value = {
+      enabled: true,
+      message: `Ошибка входа: ${response.data}`,
+      type: 'error',
+    }
 
     return
   }
-  authStore.$state.userData = response.data
-
+  authStore.$state.userData =
+    {
+      ...response.data,
+    }
+  snackbar.value = {
+    enabled: true,
+    type: 'success',
+    message: "Вы успешно вошли!",
+  }
   setTimeout (
     () => {
       router.push ({ "name": 'index' })
@@ -69,12 +90,12 @@ const login = async () => {
     class="auth-wrapper  d-flex justify-center align-center pa-md-4"
   >
     <VSnackbar
-      v-model="isError"
+      v-model="snackbar.enabled"
       location="top end"
       variant="flat"
-      color="error"
+      :color="snackbar.type"
     >
-      {{ errorMessage }}
+      {{ snackbar.message }}
     </VSnackbar>
     <div class="position-relative">
       <!-- 👉 Top shape -->

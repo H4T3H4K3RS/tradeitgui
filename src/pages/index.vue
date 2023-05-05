@@ -8,6 +8,11 @@ const itemStore = useItemStore ()
 const authStore = useAuthStore ()
 const data = ref (null)
 
+const loadMessage = ref ({
+  message: "Загружаем предметы 🧠",
+  status: 0,
+})
+
 const snackbar = ref ({
   enabled: false,
   type: 'success',
@@ -17,16 +22,14 @@ const snackbar = ref ({
 watchEffect (
   () => {
     if (data.value === null) {
-      snackbar.value = {
-        enabled: true,
+      loadMessage.value = {
         message: "Загружаем предметы 🧠",
-        type: 'warning',
+        status: 0,
       }
     } else if (data.value.length === 0) {
-      snackbar.value = {
-        enabled: true,
-        message: "Больше нет предметов :(",
-        type: 'error',
+      loadMessage.value = {
+        message: "Больше нет предметов",
+        status: 2,
       }
     }
   },
@@ -39,6 +42,8 @@ watchEffect (
       },
     ).then (
       response => {
+        if (response.status > 250)
+          throw `${response.status}`
         data.value = [ ...response.data ]
         snackbar.value = {
           enabled: true,
@@ -50,7 +55,7 @@ watchEffect (
       error => {
         snackbar.value = {
           enabled: true,
-          message: `Error occured: ${error}`,
+          message: `Ошибка загрузки предметов: ${error}`,
           type: 'error',
         }
       },
@@ -70,6 +75,34 @@ watchEffect (
       {{ snackbar.message }}
     </VSnackbar>
     <VRow>
+      <VCol
+        v-if="!data || !data.length"
+        cols="12"
+      >
+        <VCard>
+          <VCardText
+            class="d-flex justify-center text-center text-body-1 align-center"
+          >
+            {{ loadMessage.message }}
+            <VProgressCircular
+              v-if="loadMessage.status === 0"
+              :width="3"
+              color="primary"
+              indeterminate
+            />
+            <VIcon
+              v-else-if="loadMessage.status === 1"
+              color="success"
+              icon="tabler-tick"
+            />
+            <VIcon
+              v-else
+              color="error"
+              icon="tabler-x"
+            />
+          </VCardText>
+        </VCard>
+      </VCol>
       <VCol
         v-for="item in data"
         :key="item.id"
@@ -92,24 +125,20 @@ watchEffect (
           </VCardItem>
 
           <VCardText>
-            {{ item.description }}
+            {{ item.description.slice (0, 40) }}
+            {{ item.description.length > 40 ? '...' : '' }}
           </VCardText>
           <VCardText>
-            Category:
+            Категория:
             <VChip
               color="warning"
               variant="tonal"
             >
-              <!--            <VChip -->
-              <!--              color="warning" -->
-              <!--              variant="tonal" -->
-              <!--              :to="{name: 'index'}" -->
-              <!--            > -->
               {{ capitalize (item.category) }}
             </VChip>
           </VCardText>
           <VCardText>
-            Tags:
+            Теги:
             <VChip
               v-for="(tag, i) in item.tags"
               :key="i"
@@ -130,7 +159,7 @@ watchEffect (
                 variant="flat"
                 append-icon="tabler-eye"
               >
-                View
+                Просмотр
               </VChip>
             </RouterLink>
             <VSpacer />
@@ -140,7 +169,9 @@ watchEffect (
                 size="1.2rem"
                 class="me-2 cursor-pointer"
               />
-              <span class="text-subtitle-2 me-4">{{ item.time_created.replace ("T", " ").slice (0, -11) }}</span>
+              <span class="text-subtitle-2 me-4">{{
+                item.time_created.replace ("T", " ").slice (0, -11)
+              }}</span>
             </div>
           </VCardActions>
         </VCard>

@@ -21,8 +21,15 @@ const setup = store => {
   axiosInstance.interceptors.response.use (
     res => {
       const originalConfig = res?.config
-      if (!originalConfig.url.includes ("refresh") && res) {
+      if (!originalConfig.url.includes ("refresh")
+
+        // && !originalConfig.url.includes ("login")
+        // && !originalConfig.url.includes ("register")
+        && res) {
         if (res.status === 401 && !originalConfig._retry) {
+          if (originalConfig.url.includes ('token')) {
+            return Promise.reject (res)
+          }
           originalConfig._retry = true
 
           return store.refresh ({

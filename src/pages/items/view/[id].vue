@@ -4,11 +4,15 @@ import { useItemStore, useReportStore, useWishStore } from "@/stores/useRest"
 import PhotoList from "@/views/items/PhotoList.vue"
 import { capitalize } from "vue"
 import CreateReportDialog from "@/views/report/CreateReportDialog.vue"
+import { useAuthStore } from "@/stores/useAuthStore"
+import QrCodeDialog from "@/views/QrCodeDialog.vue"
 
 const isCreateReportDialogVisible = ref (false)
+const isQRVisible = ref (false)
 const router = useRouter ()
 const route = useRoute ()
 const tab = ref ('base-info')
+const authStore = useAuthStore ()
 const itemStore = useItemStore ()
 const wishStore = useWishStore ()
 
@@ -17,8 +21,6 @@ const snackbar = ref ({
   type: 'success',
   message: 'Hello!',
 })
-
-const wishItems = ref ([])
 
 const item = ref ({
   name: "",
@@ -34,13 +36,12 @@ const addToWhitelist = () => {
     item: item.value.id,
   }).then (
     response => {
-      wishItems.value.push (response.data)
       snackbar.value = {
         enabled: true,
         message: 'Предмет добавлен в список желаний 🎉',
         type: 'success',
       }
-      item.value.presented_in_wish_list = false
+      item.value.presented_in_wish_list = true
     },
   ).catch (
     error => {
@@ -56,10 +57,9 @@ const addToWhitelist = () => {
 
 const deleteFromWhitelist = () => {
   wishStore.deleteItem ({
-    id: wish.value.id,
+    id: item.value.id,
   }).then (
     response => {
-      wishItems.value = wishItems.value.filter (item => item.id !== wish.value.id)
       snackbar.value = {
         enabled: true,
         message: 'Предмет удалён из списка желаний 🎉',
@@ -79,27 +79,6 @@ const deleteFromWhitelist = () => {
   )
 }
 
-watchEffect (
-  () => {
-    wishStore.fetchItems (
-      {},
-    ).then (
-      response => {
-        wishItems.value = response.data
-        console.log (wishItems.value)
-      },
-    ).catch (
-      error => {
-        snackbar.value = {
-          enabled: true,
-          message: error,
-          type: 'error',
-        }
-        console.log (error)
-      },
-    )
-  },
-)
 
 watchEffect (
   () => {
@@ -116,6 +95,8 @@ watchEffect (
       },
     ).then (
       response => {
+        if (response.status > 250)
+          throw `${response.status}`
         item.value = response.data
 
         snackbar.value = {
@@ -132,17 +113,16 @@ watchEffect (
           type: 'error',
         }
         console.log (error)
+        setTimeout (
+          () => {
+            router.push ({
+              name: "index",
+            })
+          },
+          500,
+        )
       },
     )
-  },
-)
-
-const wish = computed (
-  () => {
-    let value = wishItems.value.find (obj => obj.item === item.value.id)
-    console.log (value)
-
-    return value
   },
 )
 
@@ -179,31 +159,37 @@ const prepareUrl = title => {
                 color="info"
                 class="float-end me-1 mt-1"
                 append-icon="tabler-share-2"
+                @click="isQRVisible = true"
               >
-                Share
-              </VChip><VChip
-                color="primary"
-                class="float-end me-1 mt-1"
-                append-icon="tabler-arrows-exchange"
-              >
-                Trade
+                Поделиться
               </VChip>
-              <VChip
-                class="float-end me-1 mt-1"
-                append-icon="tabler-pencil"
+              <template
+                v-if="item.user !== authStore.userData?.id"
               >
-                Message
-              </VChip>
-              <VChip
-                color="warning"
-                class="float-end me-1 mt-1"
-                append-icon="tabler-alert-triangle"
-                @click="isCreateReportDialogVisible = true"
-              >
-                Report
-              </VChip>
+                <VChip
+                  color="primary"
+                  class="float-end me-1 mt-1"
+                  append-icon="tabler-arrows-exchange"
+                >
+                  Обмен
+                </VChip>
+                <VChip
+                  class="float-end me-1 mt-1"
+                  append-icon="tabler-pencil"
+                >
+                  Сообщение
+                </VChip>
+                <VChip
+                  color="warning"
+                  class="float-end me-1 mt-1"
+                  append-icon="tabler-alert-triangle"
+                  @click="isCreateReportDialogVisible = true"
+                >
+                  Жалоба
+                </VChip>
+              </template>
             </span>
-            <span>
+            <span v-if="item.user !== authStore.userData.id">
               <VChip
                 v-if="!item.presented_in_wish_list"
                 color="success"
@@ -211,7 +197,7 @@ const prepareUrl = title => {
                 append-icon="tabler-plus"
                 @click="addToWhitelist"
               >
-                Add to wishlist
+                Добавить в избранное
               </VChip>
               <VChip
                 v-else
@@ -220,15 +206,28 @@ const prepareUrl = title => {
                 append-icon="tabler-x"
                 @click="deleteFromWhitelist"
               >
-                Delete from wishlist
+                Удалить из избранного
               </VChip>
+            </span>
+            <span v-else-if="item.user === authStore.userData?.id">
+              <RouterLink
+                :to="{name: 'items-edit-id', params: {id: item.id}}"
+              >
+                <VChip
+                  color="warning"
+                  class="float-end me-1 mt-1 cursor-pointer"
+                  append-icon="tabler-pencil"
+                >
+                  Редактировать
+                </VChip>
+              </RouterLink>
             </span>
           </VCardText>
           <VCardText>
             <span
               class="font-weight-bold text-h6"
             >
-              Description:
+              Описание:
             </span>
             {{ item.description }}
           </VCardText>
@@ -236,7 +235,7 @@ const prepareUrl = title => {
             <span
               class="font-weight-bold text-h6"
             >
-              Category:
+              Категория:
             </span>
             <VChip
               color="warning"
@@ -249,7 +248,7 @@ const prepareUrl = title => {
             <span
               class="font-weight-bold text-h6"
             >
-              Tags:
+              Теги:
             </span>
             <template
               v-if="item.tags"
@@ -269,7 +268,7 @@ const prepareUrl = title => {
                 variant="tonal"
                 class="me-1"
               >
-                No tags
+                Нет тегов
               </VChip>
             </template>
           </VCardText>
@@ -287,6 +286,9 @@ const prepareUrl = title => {
     <CreateReportDialog
       v-model:isDialogVisible="isCreateReportDialogVisible"
       v-model:item="item"
+    />
+    <QrCodeDialog
+      v-model:isDialogVisible="isQRVisible"
     />
   </div>
 </template>

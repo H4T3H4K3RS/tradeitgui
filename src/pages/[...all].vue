@@ -1,34 +1,42 @@
 <script setup>
-import misc404 from '@images/pages/404.png'
+// @formatter:off
+import misc404 from '@/assets/images/logo.svg'
 import miscMaskDark from '@images/pages/misc-mask-dark.png'
 import miscMaskLight from '@images/pages/misc-mask-light.png'
 import { useGenerateImageVariant } from '@core/composable/useGenerateImageVariant'
+import { themeConfig } from "@themeConfig"
+import { VNodeRenderer } from "@layouts/components/VNodeRenderer"
 
-const authThemeMask = useGenerateImageVariant(miscMaskLight, miscMaskDark)
+const authThemeMask = useGenerateImageVariant (miscMaskLight, miscMaskDark)
 </script>
 
 <template>
   <div class="misc-wrapper">
     <ErrorHeader
-      error-title="Page Not Found :("
-      error-description="We couldn't find the page you are looking for."
+      error-title="Страница не найдена :("
+      error-description="К сожалению, мы не можем найти страницу, которую вы запрашиваете."
     />
+
+    <!-- 👉 Image -->
+    <div class="misc-avatar w-100 text-center">
+      <VCardItem class="justify-center">
+        <template #prepend>
+          <div class="d-flex">
+            <VNodeRenderer :nodes="themeConfig.app.logo" />
+          </div>
+        </template>
+
+        <VCardTitle class="font-weight-bold text-h5 py-1">
+          {{ themeConfig.app.title }}
+        </VCardTitle>
+      </VCardItem>
+    </div>
     <VBtn
       to="/"
       class="mb-12"
     >
-      Back to Home
+      Обратно на главную
     </VBtn>
-
-    <!-- 👉 Image -->
-    <div class="misc-avatar w-100 text-center">
-      <VImg
-        :src="misc404"
-        alt="Coming Soon"
-        :max-width="200"
-        class="mx-auto"
-      />
-    </div>
 
     <VImg
       :src="authThemeMask"
@@ -43,5 +51,5 @@ const authThemeMask = useGenerateImageVariant(miscMaskLight, miscMaskDark)
 
 <route lang="yaml">
 meta:
-  layout: blank
+    layout: blank
 </route>
