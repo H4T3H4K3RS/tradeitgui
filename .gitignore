@@ -1,6 +1,6 @@
 # Created by https://www.toptal.com/developers/gitignore/api/webstorm+all,vuejs,vue,node
 # Edit at https://www.toptal.com/developers/gitignore?templates=webstorm+all,vuejs,vue,node
-
+.vscode
 ### Node ###
 # Logs
 logs
