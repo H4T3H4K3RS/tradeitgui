@@ -12,8 +12,9 @@ const props = defineProps ({
 
 const emit = defineEmits ([ 'update:isDialogVisible' ])
 
-const selectedPlan = ref ('monthly')
+const selectedItem = ref (null)
 
+const items = ref (null)
 
 const dialogModelValueUpdate = val => {
   emit ('update:isDialogVisible', val)
@@ -33,19 +34,20 @@ const dialogModelValueUpdate = val => {
     <VCard class="py-8">
       <VCardItem class="text-center">
         <VCardTitle class="text-h5 mb-5">
-          Report
+          Предложение Обмена
         </VCardTitle>
 
         <p>
-          Write a report
+          Выберите вещь, предложите и ожидайте подтверждения от пользователя!
         </p>
       </VCardItem>
 
       <VCardText class="d-flex align-center flex-wrap flex-sm-nowrap px-15">
         <VSelect
-          v-model="selectedPlan"
+          v-model="selectedItem"
           label="Choose Plan"
-          :items="plansList"
+          :loading="!items?.length"
+          :items="items ? item : []"
           item-title="text"
           item-value="value"
           density="compact"
