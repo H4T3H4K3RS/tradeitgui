@@ -75,25 +75,25 @@ const logout = () => {
             </VListItemSubtitle>
           </VListItem>
 
-          <VDivider class="my-2"/>
+          <VDivider class="my-2" />
 
           <!-- 👉 Profile -->
-          <VListItem :to="{ name: 'user'}">
-            <template #prepend>
-              <VIcon
-                class="me-2"
-                icon="tabler-user"
-                size="22"
-              />
-            </template>
+          <!--          <VListItem :to="{ name: 'user'}"> -->
+          <!--            <template #prepend> -->
+          <!--              <VIcon -->
+          <!--                class="me-2" -->
+          <!--                icon="tabler-user" -->
+          <!--                size="22" -->
+          <!--              /> -->
+          <!--            </template> -->
 
-            <VListItemTitle>Профиль</VListItemTitle>
-          </VListItem>
+          <!--            <VListItemTitle>Профиль</VListItemTitle> -->
+          <!--          </VListItem> -->
 
-<!--          &lt;!&ndash; Divider &ndash;&gt;-->
-<!--          <VDivider class="my-2"/>-->
+          <!--          &lt;!&ndash; Divider &ndash;&gt; -->
+          <!--          <VDivider class="my-2"/> -->
 
-<!--          &lt;!&ndash; 👉 Logout &ndash;&gt;-->
+          <!--          &lt;!&ndash; 👉 Logout &ndash;&gt; -->
           <VListItem
             link
             @click="logout"

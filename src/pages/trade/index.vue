@@ -6,16 +6,16 @@ const isCreateReportDialogVisible = ref (false)
 
 const tabs = ref ([
   {
-    name: 'Pending',
-    value: "Pending",
+    name: 'В процессе',
+    value: "created",
   },
   {
-    name: 'Declined',
-    value: "Declined",
+    name: 'Отклонённые',
+    value: "not_accepted",
   },
   {
-    name: 'Accepted',
-    value: "Accepted",
+    name: 'Принятые',
+    value: "accepted",
   },
 ])
 
@@ -24,7 +24,7 @@ import { useAuthStore } from "@/stores/useAuthStore"
 
 const router = useRouter ()
 
-const tradeStore = useTradeStore()
+const tradeStore = useTradeStore ()
 const authStore = useAuthStore ()
 const data = ref (null)
 const rowPerPage = ref (10)
@@ -112,7 +112,7 @@ const formatTimestamp = timestamp => {
   else
     date = new Date (timestamp * 1000).toISOString ()
 
-  return date.slice (0, -5).replaceAll ("T", " ").replaceAll ("-", ".")
+  return date.slice (0, -11).replaceAll ("T", " ").replaceAll ("-", ".")
 }
 
 watchEffect (
@@ -175,13 +175,13 @@ const deleteItem = async id => {
       >
         {{ tabItem.name }}
       </VTab>
-      <VSpacer />
-      <VBtn
-        append-icon="tabler-plus"
-        @click="isCreateReportDialogVisible = true"
-      >
-        Создать
-      </VBtn>
+      <!--      <VSpacer /> -->
+      <!--      <VBtn -->
+      <!--        append-icon="tabler-plus" -->
+      <!--        @click="isCreateReportDialogVisible = true" -->
+      <!--      > -->
+      <!--        Создать -->
+      <!--      </VBtn> -->
     </VTabs>
     <VCard flat>
       <VCardText>

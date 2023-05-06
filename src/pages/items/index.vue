@@ -3,15 +3,15 @@ const tab = ref ('exposed')
 
 const tabs = ref ([
   {
-    name: 'Exposed',
+    name: 'Выставленные',
     value: "exposed",
   },
   {
-    name: 'Draft',
+    name: 'Черновики',
     value: "draft",
   },
   {
-    name: 'Exchnaged',
+    name: 'Уже обменяли 🎉',
     value: "exchanged",
   },
 ])
@@ -104,7 +104,7 @@ const formatTimestamp = timestamp => {
   else
     date = new Date (timestamp * 1000).toISOString ()
 
-  return date.slice (0, -5).replaceAll ("T", " ").replaceAll ("-", ".")
+  return date.slice (0, -11).replaceAll ("T", " ").replaceAll ("-", ".")
 }
 
 const deleteItem = async id => {
@@ -148,26 +148,38 @@ const deleteItem = async id => {
     >
       {{ snackbar.message }}
     </VSnackbar>
-    <VTabs
-      v-model="tab"
-      class="mb-1"
-    >
-      <VTab
-        v-for="tabItem in tabs"
-        :key="tabItem.value"
-        :value="tabItem.value"
+    <VRow>
+      <VCol
+        cols="12"
+        sm="8"
+        class="w-100 d-flex d-md-block justify-center justify-md-start"
       >
-        {{ tabItem.name }}
-      </VTab>
-      <VSpacer />
-      <VBtn
-        :to="{name: 'items-new'}"
-        append-icon="tabler-plus"
+        <VTabs
+          v-model="tab"
+          class="mb-1"
+        >
+          <VTab
+            v-for="tabItem in tabs"
+            :key="tabItem.value"
+            :value="tabItem.value"
+          >
+            {{ tabItem.name }}
+          </VTab>
+        </VTabs>
+      </VCol>
+      <VCol
+        cols="12"
+        sm="4"
       >
-        Разместить
-      </VBtn>
-    </VTabs>
-
+        <VBtn
+          class="w-100"
+          :to="{name: 'items-new'}"
+          append-icon="tabler-circle-plus"
+        >
+          Разместить
+        </VBtn>
+      </VCol>
+    </VRow>
     <VCard flat>
       <VCardText>
         <VWindow v-model="tab">

@@ -28,7 +28,7 @@ watchEffect (
   () => {
     snackbar.value = {
       enabled: true,
-      message: "Loading item 🧠",
+      message: "Загружаем предмет 🧠",
       type: 'warning',
     }
     itemStore.fetchItem (
@@ -40,7 +40,7 @@ watchEffect (
         form.value = response.data
         snackbar.value = {
           enabled: true,
-          message: "Item loaded 🎉",
+          message: "Предмет загружен 🎉",
           type: 'success',
         }
       },
@@ -59,26 +59,22 @@ watchEffect (
 
 const categoryList = [
   {
-    name: 'Clothes',
+    name: 'Одежда',
     value: "clothes",
   },
   {
-    name: 'Accessory',
+    name: 'Аксессуары',
     value: "accessory",
   },
 ]
 
 const stateList = [
   {
-    name: 'Exchnaged',
-    value: "exchanged",
-  },
-  {
-    name: 'Exposed',
+    name: 'Выставить',
     value: "exposed",
   },
   {
-    name: 'Draft',
+    name: 'Черновик',
     value: "draft",
   },
 ]
