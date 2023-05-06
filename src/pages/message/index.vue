@@ -6,20 +6,20 @@ const isCreateReportDialogVisible = ref (false)
 
 const tabs = ref ([
   {
-    name: 'Pending',
+    name: 'В процессе',
     value: "Pending",
   },
   {
-    name: 'Declined',
+    name: 'Отклонённые',
     value: "Declined",
   },
   {
-    name: 'Accepted',
+    name: 'Принятые',
     value: "Accepted",
   },
 ])
 
-import { useMessageStore, useReportStore, usemessageStoree } from "@/stores/useRest"
+import { useMessageStore, useReportStore } from "@/stores/useRest"
 import { useAuthStore } from "@/stores/useAuthStore"
 
 const router = useRouter ()
@@ -112,7 +112,7 @@ const formatTimestamp = timestamp => {
   else
     date = new Date (timestamp * 1000).toISOString ()
 
-  return date.slice (0, -5).replaceAll ("T", " ").replaceAll ("-", ".")
+  return date.slice (0, -11).replaceAll ("T", " ").replaceAll ("-", ".")
 }
 
 watchEffect (

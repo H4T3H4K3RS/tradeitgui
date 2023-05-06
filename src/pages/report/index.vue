@@ -6,15 +6,15 @@ const isCreateReportDialogVisible = ref (false)
 
 const tabs = ref ([
   {
-    name: 'Pending',
+    name: 'В процессе',
     value: "Pending",
   },
   {
-    name: 'Declined',
+    name: 'Отклонённые',
     value: "Declined",
   },
   {
-    name: 'Accepted',
+    name: 'Принятые',
     value: "Accepted",
   },
 ])
@@ -112,7 +112,7 @@ const formatTimestamp = timestamp => {
   else
     date = new Date (timestamp * 1000).toISOString ()
 
-  return date.slice (0, -5).replaceAll ("T", " ").replaceAll ("-", ".")
+  return date.slice (0, -11).replaceAll ("T", " ").replaceAll ("-", ".")
 }
 
 watchEffect (
@@ -164,25 +164,38 @@ const deleteItem = async id => {
     >
       {{ snackbar.message }}
     </VSnackbar>
-    <VTabs
-      v-model="tab"
-      class="mb-1"
-    >
-      <VTab
-        v-for="tabItem in tabs"
-        :key="tabItem.value"
-        :value="tabItem.value"
+    <VRow>
+      <VCol
+        cols="12"
+        sm="8"
+        class="w-100 d-flex d-md-block justify-center justify-md-start"
       >
-        {{ tabItem.name }}
-      </VTab>
-      <VSpacer />
-      <VBtn
-        append-icon="tabler-plus"
-        @click="isCreateReportDialogVisible = true"
+        <VTabs
+          v-model="tab"
+          class="mb-1"
+        >
+          <VTab
+            v-for="tabItem in tabs"
+            :key="tabItem.value"
+            :value="tabItem.value"
+          >
+            {{ tabItem.name }}
+          </VTab>
+        </VTabs>
+      </VCol>
+      <VCol
+        cols="12"
+        sm="4"
       >
-        Создать
-      </VBtn>
-    </VTabs>
+        <VBtn
+          class="w-100"
+          append-icon="tabler-circle-plus"
+          @click="isCreateReportDialogVisible = true"
+        >
+          Создать
+        </VBtn>
+      </VCol>
+    </VRow>
     <VCard flat>
       <VCardText>
         <VWindow v-model="tab">
@@ -246,8 +259,8 @@ const deleteItem = async id => {
                     {{ item.id }}
                   </td>
                   <td class="text-high-emphasis">
-                    {{ item.message.slice (0, 100) }}
-                    {{ item.message.length > 100 ? '...' : '' }}
+                    {{ item.message.slice (0, 40) }}
+                    {{ item.message.length > 40 ? '...' : '' }}
                   </td>
                   <td class="text-high-emphasis">
                     <VChip

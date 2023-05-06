@@ -88,7 +88,7 @@ const formatTimestamp = timestamp => {
   else
     date = new Date (timestamp * 1000).toISOString ()
 
-  return date.slice (0, -5).replaceAll ("T", " ").replaceAll ("-", ".")
+  return date.slice (0, -11).replaceAll ("T", " ").replaceAll ("-", ".")
 }
 
 const deleteItem = async id => {
@@ -191,7 +191,7 @@ const deleteItem = async id => {
                     class="cursor-pointer"
                     color="primary"
                   >
-                    TODO {{ item.item }}
+                    {{ item.item_name }}
                   </VChip>
                 </RouterLink>
               </td>

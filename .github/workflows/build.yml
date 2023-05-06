@@ -27,13 +27,17 @@ jobs:
       - name: Build the Application
         run: npm run build
         env:
-          VITE_API_URL: https://4580-51-250-73-26.ngrok-free.app
+          VITE_API_URL: https://api.happynewyear.space/api/v1
           VITE_AUTHORIZATION_HEADER: Bearer
 
-      - name: Copy Dockerfile and .dockerignore to dist directory
+      - name: Copy Dockerfile and .dockerignore and nginx.conf to dist directory
         run: |
+          mv dist tmp_dist
+          mkdir -p dist/dist
+          mv tmp_dist/* dist/dist/
           cp Dockerfile dist/
           cp .dockerignore dist/
+          cp nginx.conf dist/
         working-directory: .
 
       - name: Deploy to Release Branch

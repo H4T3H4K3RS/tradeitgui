@@ -8,6 +8,7 @@ import { useAuthStore } from "@/stores/useAuthStore"
 import QrCodeDialog from "@/views/QrCodeDialog.vue"
 
 const isCreateReportDialogVisible = ref (false)
+const isSuggestExchangeDialogVisible = ref (false)
 const isQRVisible = ref (false)
 const router = useRouter ()
 const route = useRoute ()
