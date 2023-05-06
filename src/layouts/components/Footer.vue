@@ -12,7 +12,7 @@
         class="mx-1"
       />
       For <a
-        href="https://vk.com/hydralabs"
+        href="https://vk.com/cshse"
         target="_blank"
         rel="noopener noreferrer"
         class="text-primary ms-1"

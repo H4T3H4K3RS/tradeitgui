@@ -133,8 +133,7 @@ const login = async () => {
               <VCol cols="12">
                 <VTextField
                   v-model="form.username"
-                  label="Username"
-                  placeholder="Введите username"
+                  label="Имя пользователя"
                   type="text"
                   :rules="[requiredValidator]"
                 />
@@ -160,12 +159,12 @@ const login = async () => {
                     label="Запомнить меня"
                   />
 
-                  <RouterLink
-                    class="text-primary ms-2 mb-1"
-                    :to="{ name: 'auth-forgot' }"
-                  >
-                    Забыли пароль?
-                  </RouterLink>
+                  <!--                  <RouterLink -->
+                  <!--                    class="text-primary ms-2 mb-1" -->
+                  <!--                    :to="{ name: 'auth-forgot' }" -->
+                  <!--                  > -->
+                  <!--                    Забыли пароль? -->
+                  <!--                  </RouterLink> -->
                 </div>
 
                 <!-- login button -->

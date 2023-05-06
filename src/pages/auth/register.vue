@@ -94,7 +94,7 @@ const register = async () => {
         <VCardItem class="justify-center">
           <template #prepend>
             <div class="d-flex">
-              <VNodeRenderer :nodes="themeConfig.app.logo"/>
+              <VNodeRenderer :nodes="themeConfig.app.logo" />
             </div>
           </template>
 
@@ -122,8 +122,7 @@ const register = async () => {
               <VCol cols="12">
                 <VTextField
                   v-model="form.username"
-                  label="Username"
-                  placeholder="Введите имя пользователя"
+                  label="Имя пользователя"
                   type="text"
                   :rules="[requiredValidator]"
                 />
@@ -132,8 +131,7 @@ const register = async () => {
               <VCol cols="12">
                 <VTextField
                   v-model="form.email"
-                  label="Почта"
-                  placeholder="Введите почту"
+                  label="Email"
                   type="email"
                   :rules="[requiredValidator, emailValidator]"
                 />
@@ -145,7 +143,6 @@ const register = async () => {
                   v-model="form.password"
                   class="mb-4"
                   label="Пароль"
-                  placeholder="Введите пароль"
                   :type="isPasswordVisible ? 'text' : 'password'"
                   :append-inner-icon="isPasswordVisible ? 'tabler-eye-off' : 'tabler-eye'"
                   :rules="[requiredValidator, passwordValidator]"
