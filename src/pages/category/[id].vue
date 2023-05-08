@@ -3,6 +3,7 @@ import { useItemStore } from "@/stores/useRest"
 import { useAuthStore } from "@/stores/useAuthStore"
 import { capitalize } from "vue"
 
+const route = useRoute ()
 const router = useRouter ()
 const itemStore = useItemStore ()
 const authStore = useAuthStore ()
@@ -39,6 +40,7 @@ watchEffect (
     itemStore.fetchItems (
       {
         state: 'exposed',
+        category: route.params.id,
       },
     ).then (
       response => {

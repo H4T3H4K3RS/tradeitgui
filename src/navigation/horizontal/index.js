@@ -5,13 +5,18 @@ export default [
     icon: { icon: 'tabler-news' },
     role: 0,
   },
-
-  // {
-  //   title: 'Продукты',
-  //   to: { name: 'products' },
-  //   icon: { icon: 'tabler-article' },
-  //   role: 1,
-  // },
+  {
+    title: 'Одежда',
+    icon: { icon: 'tabler-hanger-2' },
+    to: { name: 'category-id', params: { id: 'clothes' } },
+    role: 1,
+  },
+  {
+    title: 'Аксессуары',
+    icon: { icon: 'tabler-tie' },
+    to: { name: 'category-id', params: { id: 'accessory' } },
+    role: 1,
+  },
   {
     title: 'Мои Вещи',
     icon: { icon: 'tabler-hanger' },

@@ -4,6 +4,7 @@ import { useItemStore, useReportStore, useWishStore } from "@/stores/useRest"
 import PhotoList from "@/views/items/PhotoList.vue"
 import { capitalize } from "vue"
 import CreateReportDialog from "@/views/report/CreateReportDialog.vue"
+import SuggestTradeDialog from "@/views/user/SuggestTradeDialog.vue"
 import { useAuthStore } from "@/stores/useAuthStore"
 import QrCodeDialog from "@/views/QrCodeDialog.vue"
 
@@ -28,6 +29,7 @@ const item = ref ({
   description: "",
   state: "draft",
   category: "clothes",
+  presented_in_wish_list: false,
   user: null,
   photos: [],
 })
@@ -171,6 +173,7 @@ const prepareUrl = title => {
                   color="primary"
                   class="float-end me-1 mt-1"
                   append-icon="tabler-arrows-exchange"
+                  @click="isSuggestExchangeDialogVisible = true"
                 >
                   Обмен
                 </VChip>
@@ -286,6 +289,10 @@ const prepareUrl = title => {
     </VCard>
     <CreateReportDialog
       v-model:isDialogVisible="isCreateReportDialogVisible"
+      v-model:item="item"
+    />
+    <SuggestTradeDialog
+      v-model:isDialogVisible="isSuggestExchangeDialogVisible"
       v-model:item="item"
     />
     <QrCodeDialog
