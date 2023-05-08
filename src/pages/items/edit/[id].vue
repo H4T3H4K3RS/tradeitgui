@@ -20,7 +20,6 @@ const form = ref ({
   description: "",
   state: "draft",
   category: "clothes",
-  user: 1,
   photos: [ "https://thumbs.dreamstime.com/b/grayscale-random-squares-checkered-pattern-mosaic-abstract-geometric-design-element-cubic-cubism-illustration-214781178.jpg" ],
 })
 

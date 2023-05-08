@@ -55,7 +55,7 @@ watchEffect (
       }
     } else if (data.value.length === 0) {
       loadMessage.value = {
-        message: "Нет данных",
+        message: "Нет результатов",
         status: 2,
       }
     }

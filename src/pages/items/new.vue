@@ -62,7 +62,6 @@ const newItem = async () => {
   }
   itemStore.postItem (
     {
-      user: authStore.$state.userData.id,
       ...form.value,
     },
   ).then (

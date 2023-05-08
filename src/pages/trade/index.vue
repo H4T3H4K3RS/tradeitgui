@@ -1,7 +1,7 @@
 <script setup>
 import CreateReportDialog from "@/views/report/CreateReportDialog.vue"
 
-const tab = ref ('Pending')
+const tab = ref ('created')
 const isCreateReportDialogVisible = ref (false)
 
 const tabs = ref ([
@@ -44,8 +44,6 @@ const snackbar = ref ({
   message: 'Hello!',
 })
 
-const reportPreset = ref ({})
-
 watchEffect (
   () => {
     if (data.value === null) {
@@ -55,7 +53,7 @@ watchEffect (
       }
     } else if (data.value.length === 0) {
       loadMessage.value = {
-        message: "Нет данных",
+        message: "Нет результатов",
         status: 2,
       }
     }
@@ -115,18 +113,11 @@ const formatTimestamp = timestamp => {
   return date.slice (0, -11).replaceAll ("T", " ").replaceAll ("-", ".")
 }
 
-watchEffect (
-  () => {
-    console.log (reportPreset.value)
-    reportPreset.value = isCreateReportDialogVisible.value ? reportPreset.value : {}
-    console.log (reportPreset.value)
-  },
-)
-
-const deleteItem = async id => {
-  tradeStore.deleteItem (
+const changeState = async (id, state) => {
+  tradeStore.patchItem (
     {
       id: id,
+      state: state,
     },
   ).then (
     response => {
@@ -137,7 +128,7 @@ const deleteItem = async id => {
       }
       snackbar.value = {
         enabled: true,
-        message: `Жалоба ${id} удалена`,
+        message: `Статус обмена ${id} изменён`,
         type: 'success',
       }
     },
@@ -205,27 +196,22 @@ const deleteItem = async id => {
                     scope="col"
                     class="text-subtitle-2 text-wrap"
                   >
-                    Сообщение
+                    Отданный Предмет
                   </th>
                   <th
                     scope="col"
                     class="text-subtitle-2 text-wrap"
                   >
-                    Статус
+                    Полученный Предмет
                   </th>
                   <th
                     scope="col"
                     class="text-subtitle-2 text-wrap"
                   >
-                    Дата изменения
+                    Оценка
                   </th>
                   <th
-                    scope="col"
-                    class="text-subtitle-2 text-wrap"
-                  >
-                    Дата создания
-                  </th>
-                  <th
+                    v-if="tab === 'created'"
                     scope="col"
                     class="text-subtitle-2 text-wrap"
                   >
@@ -245,35 +231,129 @@ const deleteItem = async id => {
                   <td class="text-high-emphasis">
                     {{ item.id }}
                   </td>
-                  <td class="text-high-emphasis">
-                    {{ item.message.slice (0, 100) }}
-                    {{ item.message.length > 100 ? '...' : '' }}
-                  </td>
+                  <template v-if="authStore.userData.id === item.user">
+                    <td class="text-high-emphasis">
+                      <RouterLink
+                        v-if="item.item1"
+                        :to="{name: 'items-view-id', params: {id: item.item1.id}}"
+                      >
+                        <VChip
+                          class="cursor-pointer"
+                          color="primary"
+                          variant="tonal"
+                        >
+                          TODO
+                        </VChip>
+                      </RouterLink>
+                      <VChip
+                        v-else
+                        color="error"
+                        variant="tonal"
+                      >
+                        Ничего
+                      </VChip>
+                    </td>
+                    <td class="text-high-emphasis">
+                      <RouterLink
+                        v-if="item.item2"
+                        :to="{name: 'items-view-id', params: {id: item.item2.id}}"
+                      >
+                        <VChip
+                          class="cursor-pointer"
+                          color="primary"
+                          variant="tonal"
+                        >
+                          TODO
+                        </VChip>
+                      </RouterLink>
+                      <VChip
+                        v-else
+                        color="error"
+                        variant="tonal"
+                      >
+                        Ничего
+                      </VChip>
+                    </td>
+                  </template>
+                  <template v-else>
+                    <td class="text-high-emphasis">
+                      <RouterLink
+                        v-if="item.item2"
+                        :to="{name: 'items-view-id', params: {id: item.item2.id}}"
+                      >
+                        <VChip
+                          class="cursor-pointer"
+                          color="primary"
+                          variant="tonal"
+                        >
+                          TODO
+                        </VChip>
+                      </RouterLink>
+                      <VChip
+                        v-else
+                        color="error"
+                        variant="tonal"
+                      >
+                        Отсутствует
+                      </VChip>
+                    </td>
+                    <td class="text-high-emphasis">
+                      <RouterLink
+                        v-if="item.item1"
+                        :to="{name: 'items-view-id', params: {id: item.item1.id}}"
+                      >
+                        <VChip
+                          class="cursor-pointer"
+                          color="primary"
+                          variant="tonal"
+                        >
+                          TODO
+                        </VChip>
+                      </RouterLink>
+                      <VChip
+                        v-else
+                        color="error"
+                        variant="tonal"
+                      >
+                        Отсутствует
+                      </VChip>
+                    </td>
+                  </template>
                   <td class="text-high-emphasis">
                     <VChip
+                      color="warning"
                       variant="tonal"
-                      :color="item.state === 'Accepted' ? 'success' : (item.state === 'Pending' ? 'warning' : 'error')"
+                      append-icon="tabler-star"
                     >
-                      {{ item.state }}
+                      {{ item.mark ? item.mark : '-' }}
                     </VChip>
                   </td>
-                  <td class="text-high-emphasis">
-                    {{ formatTimestamp (item.time_modified) }}
-                  </td>
-                  <td class="text-high-emphasis">
-                    {{ formatTimestamp (item.time_created) }}
-                  </td>
-                  <td class="text-high-emphasis">
+                  <td
+                    v-if="item.state === 'created'"
+                    class="text-high-emphasis"
+                  >
                     <VBtn
                       icon
                       size="x-small"
                       color="default"
                       variant="text"
-                      @click="isCreateReportDialogVisible = true; reportPreset = JSON.parse(JSON.stringify(item))"
+                      @click="changeState(item.id, 'accepted')"
                     >
                       <VIcon
                         size="22"
-                        icon="tabler-eye"
+                        icon="tabler-circle-check"
+                      />
+                    </VBtn>
+                    <VBtn
+                      icon
+                      size="x-small"
+                      color="default"
+                      variant="text"
+                      @click="changeState(item.id, 'not_accepted')"
+                    >
+                      <VIcon
+                        size="22"
+                        icon="tabler-circle-x"
                       />
                     </VBtn>
                   </td>
@@ -322,9 +402,5 @@ const deleteItem = async id => {
         </VWindow>
       </VCardText>
     </VCard>
-    <CreateReportDialog
-      v-model:isDialogVisible="isCreateReportDialogVisible"
-      v-model:report="reportPreset"
-    />
   </div>
 </template>

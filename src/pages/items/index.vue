@@ -48,7 +48,7 @@ watchEffect (
       }
     } else if (data.value.length === 0) {
       loadMessage.value = {
-        message: "Нет данных",
+        message: "Нет результатов",
         status: 2,
       }
     }
@@ -60,7 +60,6 @@ watchEffect (
     itemStore.fetchItems (
       {
         state: tab.value,
-        user: authStore.$state.userData.id,
       },
     ).then (
       response => {
@@ -148,6 +147,7 @@ const deleteItem = async id => {
     >
       {{ snackbar.message }}
     </VSnackbar>
+
     <VRow>
       <VCol
         cols="12"

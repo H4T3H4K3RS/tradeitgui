@@ -33,7 +33,7 @@ watchEffect (
       }
     } else if (data.value.length === 0) {
       loadMessage.value = {
-        message: "Нет данных",
+        message: "Нет результатов",
         status: 2,
       }
     }
@@ -43,9 +43,7 @@ watchEffect (
   () => {
     data.value = null
     wishStore.fetchItems (
-      {
-        // user: authStore.$state.userData.id,
-      },
+      {},
     ).then (
       response => {
         data.value = response.data
