@@ -56,7 +56,7 @@ const dialogModelValueUpdate = val => {
     >
       <VSnackbar
         v-model="snackbar.enabled"
-        location="top end"
+        location="bottom end"
         variant="flat"
         :color="snackbar.type"
       >

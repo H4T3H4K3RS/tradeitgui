@@ -1,10 +1,14 @@
 <script setup>
 import SendMessageDialog from "@/views/user/SendMessageDialog.vue"
 
-const tab = ref ('created')
+const tab = ref ('')
 const isChatDialogVisible = ref (false)
 
 const tabs = ref ([
+  {
+    name: 'Все',
+    value: '',
+  },
   {
     name: 'В процессе',
     value: "created",
@@ -19,8 +23,11 @@ const tabs = ref ([
   },
 ])
 
+const q = ref ("")
+const tags = ref ([])
 import { useReportStore, useTradeStore } from "@/stores/useRest"
 import { useAuthStore } from "@/stores/useAuthStore"
+import { capitalize } from "vue"
 
 const router = useRouter ()
 
@@ -144,37 +151,57 @@ const changeState = async (id, state) => {
     },
   )
 }
+
+const refresh = () => {
+  let prevVal = tab.value
+  tab.value = null
+  tab.value = prevVal
+}
 </script>
 
 <template>
   <div>
     <VSnackbar
       v-model="snackbar.enabled"
-      location="top end"
+      location="bottom end"
       variant="flat"
       :color="snackbar.type"
     >
       {{ snackbar.message }}
     </VSnackbar>
-    <VTabs
-      v-model="tab"
-      class="mb-1"
-    >
-      <VTab
-        v-for="tabItem in tabs"
-        :key="tabItem.value"
-        :value="tabItem.value"
+
+    <VRow>
+      <VCol
+        cols="12"
+        sm="8"
+        class="w-100 d-flex d-md-block justify-center justify-md-start"
       >
-        {{ tabItem.name }}
-      </VTab>
-      <!--      <VSpacer /> -->
-      <!--      <VBtn -->
-      <!--        append-icon="tabler-plus" -->
-      <!--        @click="isCreateReportDialogVisible = true" -->
-      <!--      > -->
-      <!--        Создать -->
-      <!--      </VBtn> -->
-    </VTabs>
+        <VTabs
+          v-model="tab"
+          class="mb-1"
+        >
+          <VTab
+            v-for="tabItem in tabs"
+            :key="tabItem.value"
+            :value="tabItem.value"
+          >
+            {{ tabItem.name }}
+          </VTab>
+        </VTabs>
+      </VCol>
+      <VCol
+        cols="12"
+        sm="4"
+      >
+        <VBtn
+          class="w-100"
+          append-icon="tabler-refresh"
+          @click="refresh"
+        >
+          Обновить
+        </VBtn>
+      </VCol>
+    </VRow>
     <VCard flat>
       <VCardText>
         <VWindow v-model="tab">
@@ -210,6 +237,12 @@ const changeState = async (id, state) => {
                     class="text-subtitle-2 text-wrap"
                   >
                     Оценка
+                  </th>
+                  <th
+                    scope="col"
+                    class="text-subtitle-2 text-wrap"
+                  >
+                    Статус
                   </th>
                   <th
                     scope="col"
@@ -326,6 +359,14 @@ const changeState = async (id, state) => {
                       append-icon="tabler-star"
                     >
                       {{ item.mark ? item.mark : '-' }}
+                    </VChip>
+                  </td>
+                  <td class="text-high-emphasis">
+                    <VChip
+                      :color="item.state === 'created' ? 'warning' : (item.state === 'accepted'?'success': 'warning')"
+                      variant="tonal"
+                    >
+                      {{ capitalize (item.state) }}
                     </VChip>
                   </td>
                   <td

@@ -36,6 +36,16 @@ const authStore = useAuthStore ()
 const router = useRouter ()
 
 const register = async () => {
+  let validation = await refForm?.value?.validate ()
+  if (!validation.valid) {
+    snackbar.value = {
+      enabled: true,
+      type: 'error',
+      message: "Проверьте правильность заполнения всех полей!",
+    }
+
+    return
+  }
   let response = await authStore.register (form.value)
   console.log (response.data)
   if (!response.data.success) {
@@ -76,7 +86,7 @@ const register = async () => {
   <div class="auth-wrapper d-flex align-center justify-center pa-0 pa-md-4 h-100">
     <VSnackbar
       v-model="snackbar.enabled"
-      location="top end"
+      location="bottom end"
       variant="flat"
       transition="scroll-y-reverse-transition"
       :color="snackbar.type"

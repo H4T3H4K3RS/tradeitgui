@@ -158,7 +158,7 @@ const deleteItem = async id => {
   <div>
     <VSnackbar
       v-model="snackbar.enabled"
-      location="top end"
+      location="bottom end"
       variant="flat"
       :color="snackbar.type"
     >

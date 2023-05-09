@@ -9,13 +9,13 @@ export default [
     title: 'Одежда',
     icon: { icon: 'tabler-hanger-2' },
     to: { name: 'category-id', params: { id: 'clothes' } },
-    role: 1,
+    role: 0,
   },
   {
     title: 'Аксессуары',
     icon: { icon: 'tabler-tie' },
     to: { name: 'category-id', params: { id: 'accessory' } },
-    role: 1,
+    role: 0,
   },
   {
     title: 'Мои Вещи',

@@ -27,9 +27,20 @@ const isPasswordVisible = ref (false)
 const router = useRouter ()
 const authStore = useAuthStore ()
 
+const refForm = ref ()
+
 const login = async () => {
+  let validation = await refForm?.value?.validate ()
+  if (!validation.valid) {
+    snackbar.value = {
+      enabled: true,
+      type: 'error',
+      message: "Проверьте правильность заполнения всех полей!",
+    }
+
+    return
+  }
   let response
-  console.log ("BBBB")
   try {
     response = await authStore.login (form.value)
     console.log (response.status)
@@ -91,7 +102,7 @@ const login = async () => {
   >
     <VSnackbar
       v-model="snackbar.enabled"
-      location="top end"
+      location="bottom end"
       variant="flat"
       :color="snackbar.type"
     >
@@ -127,7 +138,10 @@ const login = async () => {
         </VCardText>
 
         <VCardText>
-          <VForm @submit.prevent="() => {}">
+          <VForm
+            ref="refForm"
+            @submit.prevent="() => {}"
+          >
             <VRow>
               <!-- email -->
               <VCol cols="12">
