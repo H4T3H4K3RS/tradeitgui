@@ -212,7 +212,6 @@ const changeState = async (id, state) => {
                     Оценка
                   </th>
                   <th
-                    v-if="tab === 'created'"
                     scope="col"
                     class="text-subtitle-2 text-wrap"
                   >
@@ -330,33 +329,34 @@ const changeState = async (id, state) => {
                     </VChip>
                   </td>
                   <td
-                    v-if="item.state === 'created'"
                     class="text-high-emphasis"
                   >
-                    <VBtn
-                      icon
-                      size="x-small"
-                      color="default"
-                      variant="text"
-                      @click="changeState(item.id, 'accepted')"
-                    >
-                      <VIcon
-                        size="22"
-                        icon="tabler-circle-check"
-                      />
-                    </VBtn>
-                    <VBtn
-                      icon
-                      size="x-small"
-                      color="default"
-                      variant="text"
-                      @click="changeState(item.id, 'not_accepted')"
-                    >
-                      <VIcon
-                        size="22"
-                        icon="tabler-circle-x"
-                      />
-                    </VBtn>
+                    <template v-if="item.state === 'created'">
+                      <VBtn
+                        icon
+                        size="x-small"
+                        color="default"
+                        variant="text"
+                        @click="changeState(item.id, 'accepted')"
+                      >
+                        <VIcon
+                          size="22"
+                          icon="tabler-circle-check"
+                        />
+                      </VBtn>
+                      <VBtn
+                        icon
+                        size="x-small"
+                        color="default"
+                        variant="text"
+                        @click="changeState(item.id, 'not_accepted')"
+                      >
+                        <VIcon
+                          size="22"
+                          icon="tabler-circle-x"
+                        />
+                      </VBtn>
+                    </template>
                     <VBtn
                       icon
                       size="x-small"
