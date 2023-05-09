@@ -140,7 +140,7 @@ const prepareUrl = title => {
   <div>
     <VSnackbar
       v-model="snackbar.enabled"
-      location="top end"
+      location="bottom end"
       variant="flat"
       :color="snackbar.type"
     >
@@ -176,12 +176,6 @@ const prepareUrl = title => {
                   @click="isSuggestExchangeDialogVisible = true"
                 >
                   Обмен
-                </VChip>
-                <VChip
-                  class="float-end me-1 mt-1"
-                  append-icon="tabler-pencil"
-                >
-                  Сообщение
                 </VChip>
                 <VChip
                   color="warning"
@@ -241,12 +235,20 @@ const prepareUrl = title => {
             >
               Категория:
             </span>
-            <VChip
-              color="warning"
+            <VBtn
+              rounded="pill"
+              size="small"
+              color="primary"
               variant="tonal"
+              :to="{
+                name: 'category-id',
+                params: {
+                  id: item.category
+                }
+              }"
             >
               {{ capitalize (item.category) }}
-            </VChip>
+            </VBtn>
           </VCardText>
           <VCardText>
             <span
@@ -266,7 +268,6 @@ const prepareUrl = title => {
                 {{ tag }}
               </VChip>
             </template>
-
             <template v-else>
               <VChip
                 variant="tonal"
@@ -275,6 +276,21 @@ const prepareUrl = title => {
                 Нет тегов
               </VChip>
             </template>
+          </VCardText>
+          <VCardText>
+            <span
+              class="font-weight-bold text-h6"
+            >
+              Рейтинг:
+            </span>
+            <VChip
+              size="large"
+              :color="(!authStore.userData.user || authStore.userData.user.mark) ? 'secondary' : 'warning'"
+              variant="tonal"
+              append-icon="tabler-star"
+            >
+              {{ (authStore.userData.user && authStore.userData.user.mark) ? authStore.userData.user.mark : '-' }}
+            </VChip>
           </VCardText>
         </VCol>
         <VCol

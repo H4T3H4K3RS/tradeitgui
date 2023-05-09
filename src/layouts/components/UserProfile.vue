@@ -25,10 +25,16 @@ const logout = () => {
       class="cursor-pointer"
       color="primary"
       variant="tonal"
-      append-icon="tabler-user"
     >
       {{ authStore.$state.userData.email }}
-
+      <VChip
+        v-if="authStore.$state.userData.mark"
+        variant="elevated"
+        color="warning"
+        append-icon="tabler-star"
+      >
+        &nbsp;{{ authStore.$state.userData.mark }}
+      </VChip>
       <!-- SECTION Menu -->
       <VMenu
         open-on-hover
@@ -76,24 +82,6 @@ const logout = () => {
           </VListItem>
 
           <VDivider class="my-2" />
-
-          <!-- 👉 Profile -->
-          <!--          <VListItem :to="{ name: 'user'}"> -->
-          <!--            <template #prepend> -->
-          <!--              <VIcon -->
-          <!--                class="me-2" -->
-          <!--                icon="tabler-user" -->
-          <!--                size="22" -->
-          <!--              /> -->
-          <!--            </template> -->
-
-          <!--            <VListItemTitle>Профиль</VListItemTitle> -->
-          <!--          </VListItem> -->
-
-          <!--          &lt;!&ndash; Divider &ndash;&gt; -->
-          <!--          <VDivider class="my-2"/> -->
-
-          <!--          &lt;!&ndash; 👉 Logout &ndash;&gt; -->
           <VListItem
             link
             @click="logout"

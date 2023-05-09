@@ -34,7 +34,7 @@ export const useAuthStore = defineStore ({
     }, register (params) {
       console.log (params)
 
-      return instance.post ('/register/', params)
+      return instance.post ('/register', params)
     }, refresh (params) {
       console.log (params)
 
