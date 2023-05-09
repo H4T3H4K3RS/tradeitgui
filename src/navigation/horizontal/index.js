@@ -41,12 +41,6 @@ export default [
     role: 1,
   },
   {
-    title: 'Сообщения',
-    icon: { icon: 'tabler-messages' },
-    to: { name: 'message' },
-    role: 1,
-  },
-  {
     title: 'Избранное',
     icon: { icon: 'tabler-heart' },
     to: { name: 'wishlist' },

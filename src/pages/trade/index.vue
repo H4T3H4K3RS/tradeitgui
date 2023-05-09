@@ -1,8 +1,8 @@
 <script setup>
-import CreateReportDialog from "@/views/report/CreateReportDialog.vue"
+import SendMessageDialog from "@/views/user/SendMessageDialog.vue"
 
 const tab = ref ('created')
-const isCreateReportDialogVisible = ref (false)
+const isChatDialogVisible = ref (false)
 
 const tabs = ref ([
   {
@@ -32,6 +32,7 @@ const currentPage = ref (1)
 const totalPage = ref (1)
 const total = ref (0)
 const selectedItem = ref ({})
+const activeTrade = ref ({})
 
 const loadMessage = ref ({
   message: "Загружаем данные...",
@@ -242,7 +243,7 @@ const changeState = async (id, state) => {
                           color="primary"
                           variant="tonal"
                         >
-                          TODO
+                          {{ item.item1.name }}
                         </VChip>
                       </RouterLink>
                       <VChip
@@ -263,7 +264,7 @@ const changeState = async (id, state) => {
                           color="primary"
                           variant="tonal"
                         >
-                          TODO
+                          {{ item.item2.name }}
                         </VChip>
                       </RouterLink>
                       <VChip
@@ -286,7 +287,7 @@ const changeState = async (id, state) => {
                           color="primary"
                           variant="tonal"
                         >
-                          TODO
+                          {{ item.item2.name }}
                         </VChip>
                       </RouterLink>
                       <VChip
@@ -307,7 +308,7 @@ const changeState = async (id, state) => {
                           color="primary"
                           variant="tonal"
                         >
-                          TODO
+                          {{ item.item1.name }}
                         </VChip>
                       </RouterLink>
                       <VChip
@@ -356,6 +357,18 @@ const changeState = async (id, state) => {
                         icon="tabler-circle-x"
                       />
                     </VBtn>
+                    <VBtn
+                      icon
+                      size="x-small"
+                      color="default"
+                      variant="text"
+                      @click="activeTrade = JSON.parse(JSON.stringify(item)); isChatDialogVisible = true"
+                    >
+                      <VIcon
+                        size="22"
+                        icon="tabler-message"
+                      />
+                    </VBtn>
                   </td>
                 </tr>
               </tbody>
@@ -401,6 +414,10 @@ const changeState = async (id, state) => {
           </VWindowItem>
         </VWindow>
       </VCardText>
+      <SendMessageDialog
+        v-model:trade="activeTrade"
+        v-model:is-dialog-visible="isChatDialogVisible"
+      />
     </VCard>
   </div>
 </template>
