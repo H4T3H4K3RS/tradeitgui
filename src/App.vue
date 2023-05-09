@@ -2,20 +2,20 @@
 import { useTheme } from 'vuetify'
 import { useThemeConfig } from '@core/composable/useThemeConfig'
 import { hexToRgb } from '@layouts/utils'
-import EventBus from "@/services/EventBus";
-import { useAuthStore } from "@/stores/useAuthStore";
+import EventBus from "@/services/EventBus"
+import { useAuthStore } from "@/stores/useAuthStore"
 
 const {
   syncInitialLoaderTheme,
   syncVuetifyThemeWithTheme: syncConfigThemeWithVuetifyTheme,
   isAppRtl,
-} = useThemeConfig()
+} = useThemeConfig ()
 
-const { global } = useTheme()
+const { global } = useTheme ()
 
 // ℹ️ Sync current theme with initial loader theme
-syncInitialLoaderTheme()
-syncConfigThemeWithVuetifyTheme()
+syncInitialLoaderTheme ()
+syncConfigThemeWithVuetifyTheme ()
 
 const router = useRouter ()
 const authStore = useAuthStore ()
@@ -26,11 +26,7 @@ onMounted (
       authStore.logout ()
       router.push ({
         name: 'auth-login',
-      }).then (
-        () => {
-          router.go (0)
-        },
-      )
+      })
     })
   },
 )

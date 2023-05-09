@@ -10,12 +10,12 @@ const tabs = ref ([
     value: "created",
   },
   {
-    name: 'Отклонённые',
-    value: "not_accepted",
-  },
-  {
     name: 'Принятые',
     value: "accepted",
+  },
+  {
+    name: 'Отклонённые',
+    value: "not_accepted",
   },
 ])
 
@@ -331,7 +331,7 @@ const changeState = async (id, state) => {
                   <td
                     class="text-high-emphasis"
                   >
-                    <template v-if="item.state === 'created'">
+                    <template v-if="item.state === 'created' && item.user !== authStore.userData.id">
                       <VBtn
                         icon
                         size="x-small"
