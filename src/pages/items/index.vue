@@ -60,6 +60,7 @@ watchEffect (
     itemStore.fetchItems (
       {
         state: tab.value,
+        user: authStore.userData.id,
       },
     ).then (
       response => {
