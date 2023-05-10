@@ -78,6 +78,8 @@ watchEffect (
       response => {
         data.value = response.data.results
         selectedItem.value = response.data.results.length > 0 ? response.data.results[0] : null
+        total.value = response.data.count
+        totalPage.value = parseInt (total.value / rowPerPage.value) + 1
       },
     ).catch (
       error => {
@@ -131,6 +133,8 @@ const changeState = async (id, state) => {
     response => {
       console.log (response.data)
       data.value = data.value.filter (item => item.id !== id)
+      total.value -= 1
+      totalPage.value = parseInt (total.value / rowPerPage.value) + 1
       if (response.status > 250) {
         throw `Ошибка сохранения: ${JSON.stringify (response.data)}`
       }

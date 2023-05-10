@@ -285,11 +285,11 @@ const prepareUrl = title => {
             </span>
             <VChip
               size="large"
-              :color="(!authStore.userData.user || authStore.userData.user.mark) ? 'secondary' : 'warning'"
+              :color="(!item || !item.rating) ? 'secondary' : 'warning'"
               variant="tonal"
               append-icon="tabler-star"
             >
-              {{ (authStore.userData.user && authStore.userData.user.mark) ? authStore.userData.user.mark : '-' }}
+              {{ (item && item.rating) ? item.rating : '-' }}
             </VChip>
           </VCardText>
         </VCol>

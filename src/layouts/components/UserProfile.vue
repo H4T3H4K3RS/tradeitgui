@@ -28,12 +28,12 @@ const logout = () => {
     >
       {{ authStore.$state.userData.email }}
       <VChip
-        v-if="authStore.$state.userData.mark"
+        v-if="authStore.$state.userData.rating"
         variant="elevated"
         color="warning"
         append-icon="tabler-star"
       >
-        &nbsp;{{ authStore.$state.userData.mark }}
+        &nbsp;{{ authStore.$state.userData.rating }}
       </VChip>
       <!-- SECTION Menu -->
       <VMenu
