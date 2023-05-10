@@ -106,7 +106,7 @@ watchEffect (
           throw `Ошибка: ${response.status}`
         }
         console.log (response.data)
-        messages.value = response.data
+        messages.value = response.data.results
       },
     ).catch (
       error => {

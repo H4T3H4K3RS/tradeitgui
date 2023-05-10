@@ -44,7 +44,7 @@ watchEffect (
       response => {
         if (response.status > 250)
           throw `${response.status}`
-        data.value = [ ...response.data ]
+        data.value = [ ...response.data.results ]
         snackbar.value = {
           enabled: true,
           message: "Предметы загружены 🎉",
