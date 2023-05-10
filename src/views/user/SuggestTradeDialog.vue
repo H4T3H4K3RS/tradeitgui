@@ -43,7 +43,7 @@ watchEffect (
           throw `Ошибка: ${response.status}`
         }
         console.log (response.data)
-        items.value = response.data
+        items.value = response.data.results
         items.value.unshift (
           {
             name: "Ничего",

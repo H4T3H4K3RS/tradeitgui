@@ -76,8 +76,8 @@ watchEffect (
       },
     ).then (
       response => {
-        data.value = response.data
-        selectedItem.value = response.data.length > 0 ? response.data[0] : null
+        data.value = response.data.results
+        selectedItem.value = response.data.results.length > 0 ? response.data.results[0] : null
       },
     ).catch (
       error => {

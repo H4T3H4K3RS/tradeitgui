@@ -64,7 +64,7 @@ watchEffect (
       },
     ).then (
       response => {
-        data.value = response.data
+        data.value = response.data.results
       },
     ).catch (
       error => {
