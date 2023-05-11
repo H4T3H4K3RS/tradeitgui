@@ -1,7 +1,7 @@
 <script setup>
 import { avatarText } from '@core/utils/formatters'
 
-const props = defineProps({
+const props = defineProps ({
   notifications: {
     type: Array,
     required: true,
@@ -18,7 +18,7 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['click:readAllNotifications'])
+const emit = defineEmits ([ 'click:readAllNotifications' ])
 </script>
 
 <template>
@@ -52,7 +52,7 @@ const emit = defineEmits(['click:readAllNotifications'])
         <VList class="py-0">
           <!-- 👉 Header -->
           <VListItem
-            title="Notifications"
+            title="Уведомления"
             class="notification-section"
             height="48px"
           >
@@ -62,7 +62,7 @@ const emit = defineEmits(['click:readAllNotifications'])
                 color="primary"
                 size="small"
               >
-                {{ props.notifications.length }} New
+                {{ props.notifications.length }} Новых
               </VChip>
             </template>
           </VListItem>
@@ -92,7 +92,7 @@ const emit = defineEmits(['click:readAllNotifications'])
                     size="40"
                     variant="tonal"
                   >
-                    <span v-if="notification.text">{{ avatarText(notification.text) }}</span>
+                    <span v-if="notification.text">{{ avatarText (notification.text) }}</span>
                   </VAvatar>
                 </VListItemAction>
               </template>
@@ -110,7 +110,7 @@ const emit = defineEmits(['click:readAllNotifications'])
               block
               @click="$emit('click:readAllNotifications')"
             >
-              READ ALL NOTIFICATIONS
+              Отметить прочитанными
             </VBtn>
           </VListItem>
         </VList>

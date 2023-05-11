@@ -23,8 +23,6 @@ const tabs = ref ([
   },
 ])
 
-const q = ref ("")
-const tags = ref ([])
 import { useReportStore, useTradeStore } from "@/stores/useRest"
 import { useAuthStore } from "@/stores/useAuthStore"
 import { capitalize } from "vue"

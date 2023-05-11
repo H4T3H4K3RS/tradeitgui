@@ -8,6 +8,10 @@ const itemStore = useItemStore ()
 const authStore = useAuthStore ()
 const data = ref (null)
 
+const query = ref ("")
+const tags = ref ([])
+const tagsAvailable = [ 'New' ]
+
 const loadMessage = ref ({
   message: "Загружаем предметы 🧠",
   status: 0,
@@ -62,6 +66,35 @@ watchEffect (
     )
   },
 )
+
+const search = () => {
+  itemStore.fetchItems (
+    {
+      state: 'exposed',
+      name: query.value,
+      tags: tags.value.join (","),
+    },
+  ).then (
+    response => {
+      if (response.status > 250)
+        throw `${response.status}`
+      data.value = [ ...response.data.results ]
+      snackbar.value = {
+        enabled: true,
+        message: "Предметы загружены 🎉",
+        type: 'success',
+      }
+    },
+  ).catch (
+    error => {
+      snackbar.value = {
+        enabled: true,
+        message: `Ошибка загрузки предметов: ${error}`,
+        type: 'error',
+      }
+    },
+  )
+}
 </script>
 
 <template>
@@ -75,6 +108,72 @@ watchEffect (
       {{ snackbar.message }}
     </VSnackbar>
     <VRow>
+      <VCol
+        cols="12"
+      >
+        <VCard>
+          <VCardText
+            class="d-flex justify-center text-center text-body-1 align-center"
+          >
+            <VRow>
+              <VCol
+                class="d-flex justify-center text-center"
+                cols="12"
+                sm="5"
+              >
+                <div
+                  class="w-100"
+                >
+                  <VTextField
+                    v-model="query"
+                    label="Название"
+                  />
+                </div>
+              </VCol>
+              <VCol
+                class="d-flex justify-center text-center"
+                cols="12"
+                sm="4"
+              >
+                <div
+                  class="w-100"
+                >
+                  <VCombobox
+                    v-model="tags"
+                    :items="tagsAvailable"
+                    label="Теги"
+                    multiple
+                  >
+                    <template #selection="{ item }">
+                      <VChip class="mt-1">
+                        <VAvatar
+                          start
+                          color="primary"
+                        >
+                          {{ String (item.title).charAt (0).toUpperCase () }}
+                        </VAvatar>
+                        {{ item.title }}
+                      </VChip>
+                    </template>
+                  </VCombobox>
+                </div>
+              </VCol>
+              <VCol
+                cols="12"
+                sm="3"
+              >
+                <VBtn
+                  class="w-100"
+                  append-icon="tabler-search"
+                  @click="search"
+                >
+                  Поиск
+                </VBtn>
+              </VCol>
+            </VRow>
+          </VCardText>
+        </VCard>
+      </VCol>
       <VCol
         v-if="!data || !data.length"
         cols="12"

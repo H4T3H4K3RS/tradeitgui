@@ -14,6 +14,7 @@ const { appRouteTransition, isLessThanOverlayNavBreakpoint } = useThemeConfig ()
 const { width: windowWidth } = useWindowSize ()
 import { useAuthStore } from "@/stores/useAuthStore"
 import { isNavLinkActive } from "@layouts/utils"
+import NavBarNotifications from "@/layouts/components/NavBarNotifications.vue"
 
 
 const authStore = useAuthStore ()
@@ -71,6 +72,7 @@ watchEffect (
           </VBtn>
         </template>
         <template v-else>
+          <!--          <NavBarNotifications /> -->
           <UserProfile />
         </template>
       </div>
