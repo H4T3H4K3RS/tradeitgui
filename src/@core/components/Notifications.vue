@@ -35,7 +35,7 @@ const emit = defineEmits ([ 'click:readAllNotifications' ])
       <VBadge
         :model-value="!!props.notifications.length"
         color="error"
-        content="4"
+        :content="props.notifications.length"
       >
         <VIcon
           icon="tabler-bell"
@@ -58,11 +58,11 @@ const emit = defineEmits ([ 'click:readAllNotifications' ])
           >
             <template #append>
               <VChip
-                v-if="props.notifications.length"
+                v-if="props.notifications && props.notifications.length"
                 color="primary"
                 size="small"
               >
-                {{ props.notifications.length }} Новых
+                {{ (props.notifications && props.notifications.length) ? props.notifications.length : 0 }} Новых
               </VChip>
             </template>
           </VListItem>
@@ -72,14 +72,15 @@ const emit = defineEmits ([ 'click:readAllNotifications' ])
           <!-- 👉 Notifications list -->
           <template
             v-for="notification in props.notifications"
-            :key="notification.title"
+            :key="notification.id"
           >
             <VListItem
-              :title="notification.title"
+              :title="notification.message"
               :subtitle="notification.subtitle"
               link
               lines="one"
               min-height="66px"
+              :to="notification.to"
             >
               <!-- Slot: Prepend -->
               <!-- Handles Avatar: Image, Icon, Text -->
@@ -108,7 +109,7 @@ const emit = defineEmits ([ 'click:readAllNotifications' ])
           <VListItem class="notification-section">
             <VBtn
               block
-              @click="$emit('click:readAllNotifications')"
+              @click="$emit('click:readAllNotifications', props.notifications.map(item => item.id).join(','))"
             >
               Отметить прочитанными
             </VBtn>

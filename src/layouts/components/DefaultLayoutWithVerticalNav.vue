@@ -72,7 +72,7 @@ watchEffect (
           </VBtn>
         </template>
         <template v-else>
-          <!--          <NavBarNotifications /> -->
+          <NavBarNotifications />
           <UserProfile />
         </template>
       </div>
