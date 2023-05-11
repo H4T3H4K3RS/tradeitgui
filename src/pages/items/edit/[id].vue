@@ -100,7 +100,7 @@ const saveItem = async () => {
       console.log (response)
       snackbar.value = {
         enabled: true,
-        message: "Item saved 🎉",
+        message: "Предмет сохранён 🎉",
         type: 'success',
       }
       setTimeout (

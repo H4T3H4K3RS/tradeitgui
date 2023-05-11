@@ -72,6 +72,8 @@ watchEffect (
       response => {
         data.value = response.data.results
         selectedItem.value = response.data.results.length > 0 ? response.data.results[0] : null
+        total.value = response.data.count
+        totalPage.value = parseInt (total.value / rowPerPage.value) + 1
       },
     ).catch (
       error => {

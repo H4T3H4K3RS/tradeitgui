@@ -74,6 +74,14 @@ const sendMessage = () => {
                     {{ props.trade.item1.name }}
                   </VChip>
                 </RouterLink>
+                <VChip
+                  v-else
+                  color="error"
+                  size="large"
+                  variant="tonal"
+                >
+                  Ничего
+                </VChip>
                 <VIcon
                   icon="tabler-replace"
                 />
@@ -91,6 +99,15 @@ const sendMessage = () => {
                     {{ props.trade.item2.name }}
                   </VChip>
                 </RouterLink>
+
+                <VChip
+                  v-else
+                  color="error"
+                  size="large"
+                  variant="tonal"
+                >
+                  Ничего
+                </VChip>
               </h6>
             </div>
           </div>

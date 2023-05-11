@@ -13,6 +13,7 @@ import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
 const { appRouteTransition } = useThemeConfig ()
 import { useAuthStore } from "@/stores/useAuthStore"
 import { isNavLinkActive } from "@layouts/utils"
+import NavBarNotifications from "@/layouts/components/NavBarNotifications.vue"
 
 
 const authStore = useAuthStore ()
@@ -41,7 +42,6 @@ watchEffect (
         </h1>
       </RouterLink>
       <VSpacer />
-
       <!--      <NavbarThemeSwitcher class="me-2"/> -->
       <!--      <UserProfile/> -->
       <template
@@ -69,6 +69,7 @@ watchEffect (
         </VBtn>
       </template>
       <template v-else>
+        <NavBarNotifications />
         <UserProfile />
       </template>
     </template>

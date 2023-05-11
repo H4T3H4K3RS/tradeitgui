@@ -98,6 +98,7 @@ const deleteItem = async id => {
     response => {
       console.log (response.data)
       data.value = data.value.filter (item => item.id !== id)
+      total.value -= 1
       if (response.status > 250) {
         throw `Failed to save! Response: ${JSON.stringify (response.data)}`
       }

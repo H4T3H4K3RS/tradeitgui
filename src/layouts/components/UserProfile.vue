@@ -12,93 +12,76 @@ const logout = () => {
 </script>
 
 <template>
-  <VBadge
-    dot
-    location="bottom right"
-    offset-x="3"
-    offset-y="3"
-    bordered
-    color="success"
+  <VBtn
+    rounded
+    class="cursor-pointer"
+    color="primary"
+    variant="tonal"
   >
-    <VBtn
-      rounded
-      class="cursor-pointer"
-      color="primary"
-      variant="tonal"
+    {{ authStore.$state.userData.email }}&nbsp;
+    <VChip
+      v-if="authStore.$state.userData.rating"
+      variant="elevated"
+      color="warning"
+      append-icon="tabler-star"
     >
-      {{ authStore.$state.userData.email }}
-      <VChip
-        v-if="authStore.$state.userData.mark"
-        variant="elevated"
-        color="warning"
-        append-icon="tabler-star"
-      >
-        &nbsp;{{ authStore.$state.userData.mark }}
-      </VChip>
-      <!-- SECTION Menu -->
-      <VMenu
-        open-on-hover
-        activator="parent"
-        width="230"
-        location="bottom end"
-        offset="14px"
-      >
-        <VList>
-          <!-- 👉 User Avatar & Name -->
-          <VListItem>
-            <template #prepend>
-              <VListItemAction start>
-                <VBadge
-                  dot
-                  location="bottom right"
-                  offset-x="3"
-                  offset-y="3"
-                  color="success"
-                >
-                  <VAvatar
-                    color="primary"
-                    variant="tonal"
-                  >
-                    <VIcon
-                      icon="tabler-user"
-                    />
-                  </VAvatar>
-                </VBadge>
-              </VListItemAction>
-            </template>
-
-            <VListItemTitle class="font-weight-semibold">
-              {{ authStore.$state.userData.email }}
-            </VListItemTitle>
-            <VListItemSubtitle>
-              <VChip
-                label
-                v-bind="resolveRole(authStore.$state.userData.role).chip"
-                size="small"
+      {{ authStore.$state.userData.rating }}
+    </VChip>
+    <!-- SECTION Menu -->
+    <VMenu
+      open-on-hover
+      activator="parent"
+      width="230"
+      location="bottom end"
+      offset="14px"
+    >
+      <VList>
+        <!-- 👉 User Avatar & Name -->
+        <VListItem>
+          <template #prepend>
+            <VListItemAction start>
+              <VAvatar
+                color="primary"
+                variant="tonal"
               >
-                {{ resolveRole (authStore.$state.userData.role).status }}
-              </VChip>
-            </VListItemSubtitle>
-          </VListItem>
+                <VIcon
+                  icon="tabler-user"
+                />
+              </VAvatar>
+            </VListItemAction>
+          </template>
 
-          <VDivider class="my-2" />
-          <VListItem
-            link
-            @click="logout"
-          >
-            <template #prepend>
-              <VIcon
-                class="me-2"
-                icon="tabler-logout"
-                size="22"
-              />
-            </template>
+          <VListItemTitle class="font-weight-semibold">
+            {{ authStore.$state.userData.email }}
+          </VListItemTitle>
+          <VListItemSubtitle>
+            <VChip
+              label
+              v-bind="resolveRole(authStore.$state.userData.role).chip"
+              size="small"
+            >
+              {{ resolveRole (authStore.$state.userData.role).status }}
+            </VChip>
+          </VListItemSubtitle>
+        </VListItem>
 
-            <VListItemTitle>Выйти</VListItemTitle>
-          </VListItem>
-        </VList>
-      </VMenu>
-      <!-- !SECTION -->
-    </VBtn>
-  </VBadge>
+        <VDivider class="my-2" />
+        <VListItem
+          link
+          @click="logout"
+        >
+          <template #prepend>
+            <VIcon
+              class="me-2"
+              icon="tabler-logout"
+              size="22"
+            />
+          </template>
+
+          <VListItemTitle>Выйти</VListItemTitle>
+        </VListItem>
+      </VList>
+    </VMenu>
+    <!-- !SECTION -->
+  </VBtn>
 </template>
