@@ -70,43 +70,68 @@ const emit = defineEmits ([ 'click:readAllNotifications' ])
           <VDivider />
 
           <!-- 👉 Notifications list -->
-          <template
-            v-for="notification in props.notifications"
-            :key="notification.id"
-          >
+          <template v-if="props.notifications && props.notifications.length !== 0">
+            <template
+              v-for="notification in props.notifications"
+              :key="notification.id"
+            >
+              <VListItem
+                :title="notification.message"
+                :subtitle="notification.subtitle"
+                link
+                lines="one"
+                min-height="66px"
+              >
+                <!-- Slot: Prepend -->
+                <!-- Handles Avatar: Image, Icon, Text -->
+                <template #prepend>
+                  <VListItemAction start>
+                    <VAvatar
+                      :color="notification.color || 'primary'"
+                      :image="notification.img || undefined"
+                      :icon="notification.icon || undefined"
+                      size="40"
+                      variant="tonal"
+                    >
+                      <span v-if="notification.text">{{ avatarText (notification.text) }}</span>
+                    </VAvatar>
+                  </VListItemAction>
+                </template>
+                <!-- Slot: Append -->
+                <template #append>
+                  <small class="whitespace-no-wrap text-medium-emphasis">{{ notification.time }}</small>
+                </template>
+              </VListItem>
+              <VDivider />
+            </template>
+          </template>
+          <template v-else>
             <VListItem
-              :title="notification.message"
-              :subtitle="notification.subtitle"
+              class="mb-1"
+              title="Уведомлений нет!"
               link
               lines="one"
               min-height="66px"
-              :to="notification.to"
             >
               <!-- Slot: Prepend -->
               <!-- Handles Avatar: Image, Icon, Text -->
               <template #prepend>
                 <VListItemAction start>
                   <VAvatar
-                    :color="notification.color || 'primary'"
-                    :image="notification.img || undefined"
-                    :icon="notification.icon || undefined"
+                    color="success"
+                    icon="tabler-check"
                     size="40"
                     variant="tonal"
-                  >
-                    <span v-if="notification.text">{{ avatarText (notification.text) }}</span>
-                  </VAvatar>
+                  />
                 </VListItemAction>
               </template>
-              <!-- Slot: Append -->
-              <template #append>
-                <small class="whitespace-no-wrap text-medium-emphasis">{{ notification.time }}</small>
-              </template>
             </VListItem>
-            <VDivider />
           </template>
-
           <!-- 👉 Footer -->
-          <VListItem class="notification-section">
+          <VListItem
+            v-if="props.notifications && props.notifications.length !== 0"
+            class="notification-section"
+          >
             <VBtn
               block
               @click="$emit('click:readAllNotifications', props.notifications.map(item => item.id).join(','))"

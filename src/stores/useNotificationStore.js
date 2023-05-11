@@ -16,7 +16,7 @@ export const useNotificationStore = defineStore ({
     }, deleteItem (params) {
       return instance.delete (`/notification/${params.id}/`, { params })
     }, read (params) {
-      return instance.get (`/bulk_update_notifications/`, { params })
+      return instance.post (`/bulk_update_notifications/`, params)
     },
   },
 })

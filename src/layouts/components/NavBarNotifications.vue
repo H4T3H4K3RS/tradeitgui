@@ -12,13 +12,7 @@ const pollingThreshold = ref (600)
 const userPolling = ref (null)
 const store = useNotificationStore ()
 
-const notifications = ref ([
-  {
-    id: '1',
-    icon: 'tabler-bell',
-    message: 'Congratulation Flora! 🎉',
-  },
-])
+const notifications = ref ([])
 
 onBeforeMount (
   () => {
