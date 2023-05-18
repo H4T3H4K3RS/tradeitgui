@@ -452,6 +452,22 @@ const refresh = () => {
                         icon="tabler-message"
                       />
                     </VBtn>
+                    <template
+                      v-if="((authStore.userData.id === item.user && !item.mark1) || (authStore.userData.id !== item.user && !item.mark2)) && (item.state === 'accepted')"
+                    >
+                      <VBtn
+                        icon
+                        size="x-small"
+                        color="default"
+                        variant="text"
+                        @click="activeTrade = JSON.parse(JSON.stringify(item)); isRateDialogVisible = true"
+                      >
+                        <VIcon
+                          size="22"
+                          icon="tabler-star"
+                        />
+                      </VBtn>
+                    </template>
                   </td>
                 </tr>
               </tbody>
