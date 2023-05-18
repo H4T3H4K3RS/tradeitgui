@@ -374,7 +374,7 @@ const refresh = () => {
                         {{ item.mark1 ? item.mark1 : '-' }}&nbsp;&sol;&nbsp;{{ item.mark2 ? item.mark2 : '-' }}
                       </VChip>
                     </template>
-                    <template v-if="authStore.userData.id === item.user && item.mark1">
+                    <template v-else-if="authStore.userData.id === item.user && item.mark1">
                       <VChip
                         color="warning"
                         variant="tonal"
