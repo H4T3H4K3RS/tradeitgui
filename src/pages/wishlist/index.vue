@@ -47,6 +47,8 @@ watchEffect (
     ).then (
       response => {
         data.value = response.data.results
+        total.value = response.data.count
+        totalPage.value = parseInt (total.value / rowPerPage.value) + 1
       },
     ).catch (
       error => {
