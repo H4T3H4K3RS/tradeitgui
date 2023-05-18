@@ -9,10 +9,9 @@ export default {
       "items-new": 1,
       "items": 1,
       "report": 1,
-      "trades": 1,
+      "trade": 1,
       "message": 1,
       "wishlist": 1,
-      "items-id": 0,
     },
   loginPath: "auth-login",
 }

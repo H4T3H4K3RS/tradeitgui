@@ -147,7 +147,10 @@ const saveItem = async () => {
 
     <VCard flat>
       <VCardText>
-        <VWindow v-model="tab">
+        <VWindow
+          v-model="tab"
+          :touch="{left: null, right: null}"
+        >
           <VWindowItem value="base-info">
             <VForm class="mt-2">
               <VRow>

@@ -200,7 +200,10 @@ const deleteItem = async id => {
     </VRow>
     <VCard flat>
       <VCardText>
-        <VWindow v-model="tab">
+        <VWindow
+          v-model="tab"
+          :touch="{left: null, right: null}"
+        >
           <VWindowItem
             v-for="tabItem in tabs"
             :key="tabItem.value"

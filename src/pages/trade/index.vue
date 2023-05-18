@@ -1,8 +1,10 @@
 <script setup>
 import SendMessageDialog from "@/views/user/SendMessageDialog.vue"
+import RateTradeDialog from "@/views/user/RateTradeDialog.vue"
 
 const tab = ref ('')
 const isChatDialogVisible = ref (false)
+const isRateDialogVisible = ref (false)
 
 const tabs = ref ([
   {
@@ -74,6 +76,9 @@ watchEffect (
       },
     ).then (
       response => {
+        if (response.status > 399) {
+          throw "Ошибка загрузки данных"
+        }
         data.value = response.data.results
         selectedItem.value = response.data.results.length > 0 ? response.data.results[0] : null
         total.value = response.data.count
@@ -129,7 +134,9 @@ const changeState = async (id, state) => {
     },
   ).then (
     response => {
-      console.log (response.data)
+      if (response.status > 399) {
+        throw "Ошибка изменения статуса обмена"
+      }
       data.value = data.value.filter (item => item.id !== id)
       total.value -= 1
       totalPage.value = parseInt (total.value / rowPerPage.value) + 1
@@ -206,7 +213,10 @@ const refresh = () => {
     </VRow>
     <VCard flat>
       <VCardText>
-        <VWindow v-model="tab">
+        <VWindow
+          v-model="tab"
+          :touch="{left: null, right: null}"
+        >
           <VWindowItem
             v-for="tabItem in tabs"
             :key="tabItem.value"
@@ -226,13 +236,13 @@ const refresh = () => {
                     scope="col"
                     class="text-subtitle-2 text-wrap"
                   >
-                    Отданный Предмет
+                    Отдаёте
                   </th>
                   <th
                     scope="col"
                     class="text-subtitle-2 text-wrap"
                   >
-                    Полученный Предмет
+                    Получаете
                   </th>
                   <th
                     scope="col"
@@ -266,7 +276,7 @@ const refresh = () => {
                   <td class="text-high-emphasis">
                     {{ item.id }}
                   </td>
-                  <template v-if="authStore.userData.id === item.user">
+                  <template v-if="authStore.userData.id !== item.user">
                     <td class="text-high-emphasis">
                       <RouterLink
                         v-if="item.item1"
@@ -329,7 +339,7 @@ const refresh = () => {
                         color="error"
                         variant="tonal"
                       >
-                        Отсутствует
+                        Ничего
                       </VChip>
                     </td>
                     <td class="text-high-emphasis">
@@ -350,18 +360,48 @@ const refresh = () => {
                         color="error"
                         variant="tonal"
                       >
-                        Отсутствует
+                        Ничего
                       </VChip>
                     </td>
                   </template>
                   <td class="text-high-emphasis">
-                    <VChip
-                      color="warning"
-                      variant="tonal"
-                      append-icon="tabler-star"
-                    >
-                      {{ item.mark ? item.mark : '-' }}
-                    </VChip>
+                    <template v-if="authStore.userData.id !== item.user && item.mark2">
+                      <VChip
+                        color="warning"
+                        variant="tonal"
+                        append-icon="tabler-star-filled"
+                      >
+                        {{ item.mark1 ? item.mark1 : '-' }}&nbsp;&sol;&nbsp;{{ item.mark2 ? item.mark2 : '-' }}
+                      </VChip>
+                    </template>
+                    <template v-if="authStore.userData.id === item.user && item.mark1">
+                      <VChip
+                        color="warning"
+                        variant="tonal"
+                        append-icon="tabler-star-filled"
+                      >
+                        {{ item.mark1 ? item.mark1 : '-' }}&nbsp;&sol;&nbsp;{{ item.mark2 ? item.mark2 : '-' }}
+                      </VChip>
+                    </template>
+                    <template v-else-if="item.state !== 'accepted'">
+                      <VChip
+                        color="warning"
+                        variant="tonal"
+                        append-icon="tabler-star"
+                      >
+                        {{ item.mark1 ? item.mark1 : '-' }}&nbsp;&sol;&nbsp;{{ item.mark2 ? item.mark2 : '-' }}
+                      </VChip>
+                    </template>
+                    <template v-else>
+                      <VChip
+                        color="warning"
+                        variant="tonal"
+                        append-icon="tabler-star"
+                        @click="activeTrade = JSON.parse(JSON.stringify(item)); isRateDialogVisible = true"
+                      >
+                        {{ item.mark1 ? item.mark1 : '-' }}&nbsp;&sol;&nbsp;{{ item.mark2 ? item.mark2 : '-' }}
+                      </VChip>
+                    </template>
                   </td>
                   <td class="text-high-emphasis">
                     <VChip
@@ -460,6 +500,11 @@ const refresh = () => {
       <SendMessageDialog
         v-model:trade="activeTrade"
         v-model:is-dialog-visible="isChatDialogVisible"
+      />
+      <RateTradeDialog
+        v-model:trade="activeTrade"
+        v-model:is-dialog-visible="isRateDialogVisible"
+        @update:refresh="refresh"
       />
     </VCard>
   </div>
